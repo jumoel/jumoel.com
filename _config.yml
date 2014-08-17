@@ -6,6 +6,11 @@ timezone: Europe/Copenhagen
 
 date_format: "%b %-d, %Y"
 
+email: "contact-jumoel-com@julianmoeller.dk"
+username:
+  twitter: jumoel
+  github: jumoel
+
 latest_posts_num: 10
 
 defaults:

@@ -8,31 +8,30 @@ layout: default
   </main>
 
   <nav class="nav-side col-md-4 col-md-push-1">
-    <section>
-      <a href="/">Home</a>
-    </section>
+    <section class="spacer"></section>
 
-    <section>
-      <b>Latest posts</b>
+    {% if site.posts.size > 0 %}
+      <section>
+        <b>Latest posts</b>
 
-      <ul class="latest-posts post-list">
-        {% for post in site.posts limit:site.latest_posts_num %}
-          <li><a href="{{ post.url }}">{{ post.title }}</a> <span class="date">{{ post.date | date: site.date_format }}</span></li>
-        {% endfor %}
-      </ul>
+        <ul class="latest-posts post-list">
+          {% for post in site.posts limit:site.latest_posts_num %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a> <span class="date">{{ post.date | date: site.date_format }}</span></li>
+          {% endfor %}
+        </ul>
 
-      {% if site.posts.size > site.latest_posts_num %}
-        <a href="/archive.html">View full post archive</a>
-      {% endif %}
-    </section>
-
+        {% if site.posts.size > site.latest_posts_num %}
+          <a href="/archive.html">View full post archive</a>
+        {% endif %}
+      </section>
+    {% endif %}
 
     <section>
       <b>Elsewhere</b>
       <ul class="contact-links">
-        <li><a href="https://www.twitter.com/jumoel">twitter</a></li>
-        <li><a href="https://www.github.com/jumoel">github</a></li>
-        <li><a href="mailto:contact-jumoel-com@julianmoeller.dk">email</a></li>
+        <li><a href="https://www.twitter.com/{{ site.username.twitter }}">twitter</a></li>
+        <li><a href="https://www.github.com/{{ site.username.github }}">github</a></li>
+        <li><a href="mailto:{{ site.email }}">email</a></li>
       </ul>
     </section>
   </nav>

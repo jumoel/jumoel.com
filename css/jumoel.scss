@@ -1,11 +1,13 @@
 ---
 ---
 
+$text-color: #2E2D2D;
+
 body {
   font-family: "charter", Garamond, serif;
   font-size: 18px;
   line-height: 1.4em;
-  color: #2E2D2D;
+  color: $text-color;
   background-image: url('/images/pw_maze_white.png');
 }
 
@@ -27,6 +29,8 @@ a:hover, a:active {
 code {
   background-color: transparent;
   color: #5B6153;
+  position: relative;
+  top: -1px;
 }
 
 code, pre {
@@ -64,14 +68,15 @@ pre {
     }
 }
 
-.archive-full {
-}
-
 .nav-side {
   font-family: "source-sans", "Helvetica Neue", sans-serif;
   font-weight: 200;
-  font-size: 14px;
+  font-size: 16px;
   padding-bottom: 3em;
+
+  .date:before {
+    content: "\00a0\2014\00a0";
+  }
 
   ul {
     padding: 0;
@@ -92,6 +97,18 @@ pre {
   h1 {
     font-weight: bold;
     font-size: 28px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover:before {
+    content: "#";
+    position: absolute;
+    left: -0.5em;
+    color: lighten($text-color, 70%);
   }
 }
 
