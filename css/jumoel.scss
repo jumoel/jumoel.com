@@ -11,6 +11,24 @@ body {
   background-image: url('/images/pw_maze_white.png');
 }
 
+$list-padding: 1.2em;
+ul {
+  list-style-type: none;
+  padding-left: $list-padding;
+
+  li {
+    position: relative;
+
+    &:before {
+      content: "\2022";
+      position: absolute;
+      left: -$list-padding;
+      font-size: 14px;
+      color: lighten($text-color, 20%);
+    }
+  }
+}
+
 .container {
   border-top: 5px solid #6D785E;
   background-color: #fff;
@@ -59,9 +77,13 @@ pre {
 }
 
 
-.post-list {
+.post-list, .nav-list {
     padding: 0;
     list-style-type: none;
+
+    li:before {
+      content: "";
+    }
 
     .date {
       font-size: 0.85em;
@@ -76,11 +98,6 @@ pre {
 
   .date:before {
     content: "\00a0\2014\00a0";
-  }
-
-  ul {
-    padding: 0;
-    list-style-type: none;
   }
 
   section + section
