@@ -1,12 +1,25 @@
-# Site settings
-title: Your awesome title
-email: your-email@domain.com
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
-baseurl: ""
-url: "http://yourdomain.com"
-twitter_username: jekyllrb
-github_username:  jekyll
+# site settings
+title: Julian Møller
+description: ""
+
+timezone: Europe/Copenhagen
+
+date_format: "%b %-d, %Y"
+
+latest_posts_num: 10
+
+defaults:
+  -
+    scope: { path: "", type: "page" }
+    values:
+      layout: "sidebar"
+  -
+    scope: { path: "", type: "post" }
+    values: { layout: "post" }
 
 # Build settings
+destination: _build
 markdown: kramdown
 permalink: pretty
+permalink: /:year/:title.html
+safe: true

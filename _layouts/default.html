@@ -1,19 +1,30 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% if page.title %}{{ page.title | append: " - " }}{% endif %}{{ site.title }}</title>
+        <meta name="description" content="{{ site.description }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% include head.html %}
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        
+        <link rel="stylesheet" href="/css/jumoel.css">
+        <link rel="stylesheet" href="/css/sourcecode.css">
 
+        <link rel="stylesheet" href="/css/fonts/charter/webfont.css"> <!-- LICENSE: /css/fonts/charter/license.txt -->
+        <link rel="stylesheet" href="/css/fonts/sourcesans/webfont.css"> <!-- LICENSE: /css/fonts/sourcesans/license.txt -->
+        <link rel="stylesheet" href="/css/fonts/sourcecode/webfont.css"> <!-- LICENSE: /css/fonts/sourcecode/license.txt -->
+    </head>
     <body>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 col-md-push-1">
+            {% include header.html %}
 
-    {% include header.html %}
-
-    <div class="page-content">
-      <div class="wrap">
-      {{ content }}
+            {{ content }}
+          </div>
+        </div>
       </div>
-    </div>
-
-    {% include footer.html %}
-
     </body>
 </html>

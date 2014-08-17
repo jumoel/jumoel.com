@@ -1,0 +1,100 @@
+---
+---
+
+body {
+  font-family: "charter", Garamond, serif;
+  font-size: 18px;
+  line-height: 1.4em;
+  color: #2E2D2D;
+  background-image: url('/images/pw_maze_white.png');
+}
+
+.container {
+  border-top: 5px solid #6D785E;
+  background-color: #fff;
+}
+
+a, a:visited {
+  color: #829A63;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  color: #7A8B63;
+  text-decoration: underline;
+}
+
+code {
+  background-color: transparent;
+  color: #5B6153;
+}
+
+code, pre {
+  font-family: "source-code", "Monaco", monospace;
+  line-height: 1.4em;
+}
+
+pre {
+  background-color: transparent;
+  border-width: 0px;
+  border-radius: 0px;
+}
+
+.header-site {
+  h1 {
+    text-transform: lowercase;
+    font-style: italic;
+    color: #999;
+    font-size: 18px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+}
+
+
+.post-list {
+    padding: 0;
+    list-style-type: none;
+
+    .date {
+      font-size: 0.85em;
+    }
+}
+
+.archive-full {
+}
+
+.nav-side {
+  font-family: "source-sans", "Helvetica Neue", sans-serif;
+  font-weight: 200;
+  font-size: 14px;
+  padding-bottom: 3em;
+
+  ul {
+    padding: 0;
+    list-style-type: none;
+  }
+
+  section + section
+  {
+    margin-top: 2em;
+  }
+}
+
+.post {
+  padding-bottom: 2em;
+}
+
+.post-header {
+  h1 {
+    font-weight: bold;
+    font-size: 28px;
+  }
+}
+
+.post-meta {
+  font-size: 14px;
+}

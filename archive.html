@@ -1,0 +1,33 @@
+---
+title: Post archive
+---
+
+<h3>Full post archive <small>reverse chronological order</small></h3>
+
+
+<section class="archive-full">
+
+{% assign year = false %}
+{% assign first = true %}
+
+{% for post in site.posts %}
+  {% capture curr_year %}{{ post.date | date: "%Y "}}{% endcapture %}
+
+  {% if year != curr_year %}
+
+    {% if first %}
+      {% assign first = false %}
+    {% else %}
+      </ul>
+    {% endif %}
+
+    {% assign year = curr_year %}
+    <h3 id="year-{{ curr_year }}">{{ curr_year }}</h3>
+      <ul class="post-list">
+  {% endif %}
+
+        <li><a href="">{{ post.title }}</a> <span class="date">{{ post.date | date: site.date_format }}</date></li>
+{% endfor %}
+      </ul>
+
+</section>
