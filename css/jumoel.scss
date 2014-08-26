@@ -2,6 +2,7 @@
 ---
 
 $text-color: #2E2D2D;
+$brand-color: #6D785E;
 
 body {
   font-family: "charter", Garamond, serif;
@@ -29,8 +30,12 @@ ul {
   }
 }
 
+ol {
+  padding-left: $list-padding;
+}
+
 .container {
-  border-top: 5px solid #6D785E;
+  border-top: 5px solid $brand-color;
   background-color: #fff;
 }
 
@@ -48,7 +53,7 @@ code {
   background-color: transparent;
   color: #5B6153;
   position: relative;
-  top: -1px;
+  margin: auto -2px;
 }
 
 code, pre {
@@ -108,6 +113,10 @@ pre {
 
 .post {
   padding-bottom: 2em;
+
+  h2 {
+    font-size: 24px;
+  }
 }
 
 .post-header {
@@ -131,4 +140,15 @@ pre {
 
 .post-meta {
   font-size: 14px;
+}
+
+.footnotes {
+  font-size: 14px;
+  margin-top: 4rem;
+  padding-top: 1rem;
+  color: lighten($text-color, 30%);
+
+  p {
+    color: inherit;
+  }
 }
