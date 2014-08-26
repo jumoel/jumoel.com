@@ -9,4 +9,8 @@
     {{ content }}
   </section>
 
+  {% if excerpt %}
+    <a href="{{ post.url }}">Read more&hellip;</a>
+  {% endif %}
+
 </article>

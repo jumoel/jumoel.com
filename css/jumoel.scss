@@ -81,6 +81,14 @@ pre {
   }
 }
 
+.content-main {
+  padding-bottom: 2em;
+}
+
+.post-separator {
+  width: 50%;
+  margin: 3em auto;
+}
 
 .post-list, .nav-list {
     padding: 0;
@@ -112,8 +120,6 @@ pre {
 }
 
 .post {
-  padding-bottom: 2em;
-
   h2 {
     font-size: 24px;
   }
