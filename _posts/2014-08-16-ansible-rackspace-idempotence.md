@@ -1,6 +1,7 @@
 ---
 title: Ansible, Rackspace and Idempotence
 categories: infrastructure
+date: 2014-08-26 22:35:00
 ---
 
 I was recently tasked with transitioning a server setup from the medieval times
