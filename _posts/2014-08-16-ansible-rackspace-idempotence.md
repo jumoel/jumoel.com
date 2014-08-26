@@ -10,8 +10,9 @@ instructions that are probably outdated" to the modern times of "automate all
 the things!" Trying to make sure the process was fully codified and idempotent,
 I ran into some snags here and there. This is a documentation of those snags,
 both for a future me, but also for others, should they struggle with the same
-things. As the title says, it is focused on [Ansible][ans] and its integration
-with [Rackspace][rax].
+things. As the title says, it is focused on [Ansible][ans], its integration with
+[Rackspace][rax] and how to keep the playbook idempotent -- that is, how to make
+sure that running the playbook has no effect if no changes has been made to it.
 
 By the way - I am by no means an Ansible expert, so if any of what I write is
 pure bollocks and due to my own incompetence, please [get in touch][tw]. Now,
