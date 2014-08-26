@@ -28,6 +28,8 @@ defaults:
 # Build settings
 destination: _build
 markdown: kramdown
-permalink: pretty
 permalink: /:year/:title.html
+
+# Conform to GitHub Pages defaults
 safe: true
+lsi: false
