@@ -59,7 +59,7 @@ underway][ghissue].
 
 You can find the code at
 [github.com/jumoel/golive](https://www.github.com/jumoel/golive). If you want to
-give it a try, the binary is nothing more than a `go install
+give it a try, the binary is nothing more than a `go get
 github.com/jumoel/golive` away.
 
 As mentioned, this is my first proper project in Go, so any and all feedback is
