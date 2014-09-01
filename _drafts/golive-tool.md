@@ -6,7 +6,7 @@ I've heard that the best way to learn a new programming language is to create a
 proper project in it. `golive` is my "Learn Golang"-project. It is a simple
 deployment tool that listens to webhook requests from git repository providers
 such as Bitbucket and Github. If the pushed repository and branch matches
-something in the configuration file, the corresponding job is run.
+something in the configuration file, corresponding jobs run.
 
 `golive` is based on a simple JSON-based configuration file:
 
@@ -23,7 +23,7 @@ something in the configuration file, the corresponding job is run.
 If I've set up POST hooks in my Bitbucket repository to point to a server where
 `golive` is running, and I push some changes in the `master` branch, the `echo ...`
 action is run. If multiple actions for a single branch are required, they are
-added as strings to the array. If multiple branches are required, additional
+added as strings in the array. If multiple branches are required, additional
 keys are added:
 
 {% highlight json %}
@@ -35,9 +35,22 @@ keys are added:
 }
 {% endhighlight %}
 
-When the configuration file is changed (by being overwritten or having changes)
-At my current job we use it together with [Ansible][http://www.ansible.com]
-playbooks to deploy websites across a number of servers.
+The same goes for repositories:
+
+{% highlight json %}
+{
+  "https://bitbucket.org/jumoel/test/": { ... },
+  "https://some.other/git/repo/": { ... },
+}
+{% endhighlight %}
+
+When the configuration file is changed by being overwritten or having changes
+written to it, it is automatically reloaded.
+
+At my current job we use it together with [Ansible](http://www.ansible.com)
+playbooks to deploy websites across a number of servers. `golive` listens for
+changes in our server provisioning repo and can thus update its own
+configuration.
 
 At the moment, only Bitbucket is supported, but Github support [is
 underway][ghissue].
