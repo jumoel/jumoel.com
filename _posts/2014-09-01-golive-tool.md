@@ -1,5 +1,7 @@
 ---
 Golive: A simple deployment tool
+categories: infrastructure
+date: 2014-09-01 13:49:00
 ---
 
 I've heard that the best way to learn a new programming language is to create a
