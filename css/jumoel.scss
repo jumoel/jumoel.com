@@ -56,6 +56,11 @@ code {
   margin: auto -2px;
 }
 
+h1 code {
+  color: inherit;
+  font-weight: 600;
+}
+
 code, pre {
   font-family: "source-code", "Monaco", monospace;
   line-height: 1.4em;
