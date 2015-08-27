@@ -5,6 +5,8 @@ $text-color: #2E2D2D;
 $brand-color: #6D785E;
 
 body {
+  margin: 0.5em 0 2em;
+  
   font-family: "charter", Garamond, serif;
   font-size: 18px;
   line-height: 1.4em;
@@ -37,6 +39,8 @@ ol {
 .container {
   border-top: 5px solid $brand-color;
   background-color: #fff;
+  
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
 }
 
 a, a:visited {
@@ -54,6 +58,11 @@ code {
   color: #5B6153;
   position: relative;
   margin: auto -2px;
+}
+
+h1 code {
+  color: inherit;
+  font-weight: 600;
 }
 
 code, pre {
