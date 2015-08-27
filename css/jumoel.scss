@@ -2,16 +2,20 @@
 ---
 
 $text-color: #2E2D2D;
-$brand-color: #6D785E;
+$brand-color: #3498db;
+$brand-color-accent: #8e44ad;
+
+$serif-stack: "charter", Garamond, serif;
+$sans-serif-stack: "source-sans", "Helvetica Neue", Helvetica, Arial;
 
 body {
   margin: 0.5em 0 2em;
-  
-  font-family: "charter", Garamond, serif;
+
+  font-family: $serif-stack;
   font-size: 18px;
   line-height: 1.4em;
   color: $text-color;
-  background-image: url('/images/pw_maze_white.png');
+  background-color: #ecf0f1;
 }
 
 $list-padding: 1.2em;
@@ -39,17 +43,24 @@ ol {
 .container {
   border-top: 5px solid $brand-color;
   background-color: #fff;
-  
+
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
 }
 
 a, a:visited {
-  color: #829A63;
   text-decoration: none;
 }
 
+a {
+  color: $brand-color;
+}
+
+a:visited {
+  color: $brand-color-accent;
+}
+
 a:hover, a:active {
-  color: #7A8B63;
+  color: #2980b9;
   text-decoration: underline;
 }
 
@@ -113,13 +124,15 @@ pre {
 }
 
 .nav-side {
-  font-family: "source-sans", "Helvetica Neue", sans-serif;
+  font-family: $sans-serif-stack;
   font-weight: 200;
   font-size: 16px;
   padding-bottom: 3em;
 
-  .date:before {
-    content: "\00a0\2014\00a0";
+  .date {
+    display: block;
+    color: #555;
+    padding-bottom: 1em;
   }
 
   section + section
@@ -138,6 +151,12 @@ pre {
   h1 {
     font-weight: bold;
     font-size: 28px;
+    font-family: $sans-serif-stack;
+
+    code {
+      font-size: 0.95em;
+      letter-spacing: -1px;
+    }
   }
 
   a {

@@ -18,11 +18,11 @@ latest_posts_num: 10
 
 defaults:
   -
-    scope: { path: "", type: "page" }
+    scope: { path: "", type: "pages" }
     values:
       layout: "sidebar"
   -
-    scope: { path: "", type: "post" }
+    scope: { path: "", type: "posts" }
     values: { layout: "post" }
 
 # Build settings
