@@ -1,19 +1,49 @@
 ---
-title: "CoreOS: Getting Started with Vagrant"
+title: "Getting Started with CoreOS and Vagrant"
 categories: infrastructure
+date: 2015-09-05 13:31
 ---
 
-**Overview**
- * What is CoreOS? (simplified): run containers, auto update, manage fleets
- * What parts do we need? CoreOS, docker, Vagrant, fleet
+I've long wanted to look more closely at CoreOS, the auto-updating, cluster-loving Docker-host., specifically how to get up and
+running with applications deployed on it. This is my recipe to get started with
+CoreOS on Vagrant.
+
+I assume you, the reader, knows what Docker and Vagrant is.
+
+CoreOS is an operating system designed to run in clusters, hosting a multitude
+of Docker containers. The ecosystem consists of [a multitude of
+tools](https://coreos.com/docs/), that are all used for different purposes, not
+all of which are necessary in the beginning.
+
+The goal for this post is:
+
+ * Getting a cluster configured and running on Vagrant
+ * Examining how to start a service
+ * View status and information about a service
+ * Stopping services
+
+I plan to cover the following in future posts:
+
+ * Deploying an application consisting of multiple parts
+ * Load balancing the application to have high availability
+ * Ensuring high availability at the load balancer as well
+ * Deploying the entire cluster on a cloud provider
+ * Using a continuous integration tool to update the cluster automatically
+
+## Getting started
+
+Download [Vagrant](https://www.vagrantup.com/downloads.html) and install it.
+
+**TODO (writing)**
+
  * How do we get started?
-  * Install Vagrant
-  * Use config files from below to start a 3-machine cluster
-  * Add service file (mirrored to machines via vagrant)
-  * Start the service on the machines
-  * See the logs + status
-  * See where it is running
-  * Stop it and see status
+    * Install Vagrant
+    * Use config files from below to start a 3-machine cluster
+    * Add service file (mirrored to machines via vagrant)
+    * Start the service on the machines
+    * See the logs + status
+    * See where it is running
+    * Stop it and see status
 
 **Questions**
 
@@ -30,8 +60,38 @@ Writing service files.
 
 Control the cluster with fleet.
 
-**hello.service**
-```ini
+---
+
+To see service status:
+
+{% highlight console %}
+$ journalctl -u # example: etcd2
+{% endhighlight %}
+
+On host:
+
+{% highlight console %}
+$ vagrant up # start cluster
+$ ssh-add ~/.vagrant.d/insecure_private_key # add ssh key so we can login to the servers
+$ vagrant ssh core-01 -- -A # ssh to server 1 with ssh credentials forwarded
+{% endhighlight %}
+
+On server 1:
+
+{% highlight console %}
+fleetctl load hello.service
+fleetctl start hello.service
+fleetctl status hello.service
+fleetctl stop hello.service
+fleetctl unload hello.service
+fleetctl destroy hello.service
+{% endhighlight %}
+
+## Files
+
+#### `hello.service`
+
+{% highlight ini %}
 [Unit]
 Description=My Service
 After=docker.service
@@ -43,10 +103,11 @@ ExecStartPre=-/usr/bin/docker rm hello
 ExecStartPre=/usr/bin/docker pull busybox
 ExecStart=/usr/bin/docker run --name hello busybox /bin/sh -c "while true; do echo Hello World; sleep 1; done"
 ExecStop=/usr/bin/docker stop hello
-```
+{% endhighlight %}
 
-**config.rb**
-```ruby
+#### `config.rb`
+
+{% highlight ruby %}
 # Size of the CoreOS cluster created by Vagrant
 $num_instances=3
 
@@ -65,7 +126,7 @@ if File.exists?('user-data') && ARGV[0].eql?('up')
     data['coreos']['etcd2']['discovery'] = token
   end
 
-  # Fix for YAML.load() converting reboot-strategy from 'off' to `false`
+  # Fix for YAML.load() converting reboot-strategy from 'off' to 'false'
   if data['coreos'].key? 'update'
     if data['coreos']['update'].key? 'reboot-strategy'
       if data['coreos']['update']['reboot-strategy'] == false
@@ -77,10 +138,11 @@ if File.exists?('user-data') && ARGV[0].eql?('up')
   yaml = YAML.dump(data)
   File.open('user-data', 'w') { |file| file.write("#cloud-config\n#{yaml}") }
 end
-```
+{% endhighlight %}
 
-**user-data**
-```
+#### `user-data`
+
+{% highlight yaml %}
 #cloud-config
 ---
 coreos:
@@ -89,7 +151,7 @@ coreos:
     initial-advertise-peer-urls: http://$private_ipv4:2380
     listen-client-urls: http://0.0.0.0:2379
     listen-peer-urls: http://$private_ipv4:2380
-    discovery: https://discovery.etcd.io/<token> # will get replaced on `vagrant up`
+    discovery: https://discovery.etcd.io/<token> # will get replaced on 'vagrant up'
   fleet:
     public-ip: $public_ipv4
   flannel:
@@ -113,10 +175,11 @@ coreos:
 
       [Install]
       WantedBy=sockets.target
-```
+{% endhighlight %}
 
-**Vagrantfile**
-```ruby
+#### `Vagrantfile`
+
+{% highlight ruby %}
 # -*- mode: ruby -*-
 # # vi: set ft=ruby :
 
@@ -218,24 +281,4 @@ Vagrant.configure("2") do |config|
     end
   end
 end
-```
-
-```shell
-# to see service status
-journalctl -u <service> # example: etcd2
-```
-
-```shell
-# on host
-vagrant up # start cluster
-ssh-add ~/.vagrant.d/insecure_private_key # add ssh key so we can login to the servers
-vagrant ssh core-01 -- -A # ssh to server 1 with ssh credentials forwarded
-
-# on server 1
-fleetctl load hello.service
-fleetctl start hello.service
-fleetctl status hello.service
-fleetctl stop hello.service
-fleetctl unload hello.service
-fleetctl destroy hello.service
-```
+{% endhighlight %}
