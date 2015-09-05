@@ -3,6 +3,27 @@ title: "CoreOS: Getting Started with Vagrant"
 categories: infrastructure
 ---
 
+**Overview**
+ * What is CoreOS? (simplified): run containers, auto update, manage fleets
+ * What parts do we need? CoreOS, docker, Vagrant, fleet
+ * How do we get started?
+  * Install Vagrant
+  * Use config files from below to start a 3-machine cluster
+  * Add service file (mirrored to machines via vagrant)
+  * Start the service on the machines
+  * See the logs + status
+  * See where it is running
+  * Stop it and see status
+
+**Questions**
+
+ * What is the difference between unloading and destroying?
+ * What happens when you start a service after it has been stopped?
+
+**Things to do**
+
+ * Save output of status at different times to illustrate what happens
+
 Setting up CoreOS + Vagrant.
 
 Writing service files.
@@ -218,12 +239,3 @@ fleetctl stop hello.service
 fleetctl unload hello.service
 fleetctl destroy hello.service
 ```
-
-**Questions**
-
- * What is the difference between unloading and destroying?
- * What happens when you start a service after it has been stopped?
-
-**Things to do**
-
- * Save output of status at different times to illustrate what happens
