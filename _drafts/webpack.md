@@ -420,7 +420,7 @@ app.listen(3000, () => {
 })
 ```
 
-Run the server with `node ./src/index.server.js` open [localhost:3000](http://localhost:3000) and you'll notice that it doesn't contain the "Hello World" text. If you open the Developer Tools, you can see that the `bundle.js` file isn't transferred correctly. This is caused by every request being served by the `get('*', ...)`, which just sends the contents of `index.html`. To fix this, add the following line to `index.server.js`:
+Run the server with `node ./src/index.server.js`, open [localhost:3000](http://localhost:3000) and you'll notice that it doesn't contain the "Hello World" text. If you open the Developer Tools, you can see that the `bundle.js` file isn't transferred correctly. This is caused by every request being served by the `get('*', ...)`, which just sends the contents of `index.html`. To fix this, add the following line to `index.server.js`:
 
 ```js
 app.use('/static', express.static(path.resolve(__dirname, '../dist')));
@@ -438,7 +438,7 @@ Restart the server, reload your browser and behold "Hello World" in all its glor
 
 	* Convert server requires to imports
 	* Add server webpack config part
-	* Render react component on server
+	* Modify express to render index page with React component
 	* Add the client code to the server response
 	* Add environments and different configs
 	* Put the build pipeline in its own package
