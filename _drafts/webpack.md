@@ -5,6 +5,12 @@ categories: react
 
 If you've ever struggled getting to grips with webpack, now is a good time to get back up on the horse. A stable release of webpack 2 is out, and this guide will take you from zero to a minimal, functional webpack configuration. The end result will be a small, but functional React application. The configuration will be expanded one small item at a time and will be driven by error messages. By not starting out with a boilerplate, you'll be able to understand what each single part does, and thus be able to expand upon it yourself when new needs arise.
 
+## Goals
+
+The goal of this post is to take you from nothing to a functioning webpack configuration for React. The application will use universal rendering and the configuration will cover both client and server applications as well as different output for different environments.
+
+The post won't be covering routing, styling, data fetching or similar topics that are not directly connected to webpack.
+
 ## Getting up and running
 
 **Prerequisites**: I assume some familiarity with React: what it is, what it does, that components are the building blocks and that the JSX syntax is a way to render components. At a later stage, familiarity with Express is assumed. If all of this is foreign to you, look at the [React documentation](https://facebook.github.io/react/docs/hello-world.html), and when the need arises, the [Express documentation](http://expressjs.com/en/starter/hello-world.html). The target group I have in mind when writing this is someone who has used a a boilerplate or `create-react-app` (and wanted to peek behind the curtain), but became overwhelmed when trying to modify or understand the build setup.
