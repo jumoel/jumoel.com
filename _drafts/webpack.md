@@ -436,9 +436,9 @@ Restart the server, reload your browser and behold "Hello World" in all its glor
 
 # TODO
 
-	* Convert server requires to imports
-	* Add server webpack config part
-	* Modify express to render index page with React component
-	* Add the client code to the server response
-	* Add environments and different configs
-	* Put the build pipeline in its own package
+ * Convert server requires to imports
+ * Add server webpack config part
+ * Modify express to render index page with React component
+ * Add the client code to the server response
+ * Add environments and different configs
+ * Put the build pipeline in its own package
