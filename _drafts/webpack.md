@@ -11,11 +11,15 @@ The goal of this post is to take you from nothing to a functioning webpack confi
 
 The post won't be covering routing, styling, data fetching or similar topics that are not directly connected to webpack.
 
+## Prerequisites
+
+I assume some familiarity with React: what it is, what it does, that components are the building blocks and that the JSX syntax is a way to render components. At a later stage, familiarity with Express is assumed. If all of this is foreign to you, look at the [React documentation](https://facebook.github.io/react/docs/hello-world.html), and when the need arises, the [Express documentation](http://expressjs.com/en/starter/hello-world.html). The target group I have in mind when writing this is someone who has used a a boilerplate or `create-react-app` (and wanted to peek behind the curtain), but became overwhelmed when trying to modify or understand the build setup.
+
+With that out of the way, let's start.
+
 ## Getting up and running
 
-**Prerequisites**: I assume some familiarity with React: what it is, what it does, that components are the building blocks and that the JSX syntax is a way to render components. At a later stage, familiarity with Express is assumed. If all of this is foreign to you, look at the [React documentation](https://facebook.github.io/react/docs/hello-world.html), and when the need arises, the [Express documentation](http://expressjs.com/en/starter/hello-world.html). The target group I have in mind when writing this is someone who has used a a boilerplate or `create-react-app` (and wanted to peek behind the curtain), but became overwhelmed when trying to modify or understand the build setup.
-
-With that out of the way, let's start a new project:
+To begin with, create a new project:
 
 ```sh
 $ mkdir webpack-project && cd webpack-project && npm init -y
