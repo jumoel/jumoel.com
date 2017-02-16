@@ -13,6 +13,7 @@ something in the configuration file, corresponding jobs run.
 `golive` is based on a simple JSON-based configuration file:
 
 {% highlight json %}
+{% raw %}
 {
   "https://bitbucket.org/jumoel/test/": {
     "master": [
@@ -20,6 +21,7 @@ something in the configuration file, corresponding jobs run.
     ]
   }
 }
+{% endraw %}
 {% endhighlight %}
 
 If I've set up POST hooks in my Bitbucket repository to point to a server where
