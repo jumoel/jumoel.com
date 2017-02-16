@@ -62,11 +62,11 @@ a, a:visited {
   text-decoration: none;
 }
 
-a {
+a, a code {
   color: $brand-color;
 }
 
-a:visited {
+a:visited, a:visited code {
   color: $brand-color-accent;
 }
 
