@@ -1160,6 +1160,7 @@ $ npm run watch
 
 If you make changes to any of your source files, webpack will make a new build automatically. You will unfortunately still need to restart the server script when that has been updated. Let's change that next.
 
+<a name="restart-server"></a>
 We can use a package called [`nodemon`](https://www.npmjs.com/package/nodemon) to handle running the server script and restart it when the compiled file changes. Let's install it:
 
 ```sh
@@ -1297,6 +1298,7 @@ If you've followed along, you should:
 - Be able to [add content](#webpack-bannerplugin) to the output files or [replace content](#webpack-defineplugin) in the source files
 - Know how to [add source maps](#adding-source-maps) and know that there are different types
 - Be able to [build server side bundles](#modernizing-the-server) as well as client side bundles
+- How to make webpack [watch your code](#building-continuously) and [automatically restart the output application](#restart-server)
 - Have a feeling for how to [build a modular webpack config](#final-cleanup)
 
 I hope this guide has given you the knowledge to be able to better understand other Babel- and webpack configurations. This will let you choose the features *you* want in *your* webpack configuration, instead of having to rely on boilerplates and starter kits. And by knowing what goes on underneath, you can make a more informed decision, *should* you choose to use a starter kit or boilerplate.
