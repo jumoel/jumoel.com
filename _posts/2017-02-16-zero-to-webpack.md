@@ -3,7 +3,7 @@ title: From zero to webpack, one error at the time
 categories: tooling
 ---
 
-If you've ever struggled getting to grips with webpack, now is a good time to get started. The stable release of webpack version 2 is out, and this guide will take you from zero to a functional webpack configuration. The end result will be a small, but working React application. The configuration will be expanded one item at a time and will be driven by error messages. By not starting out with a boilerplate, you'll be able to understand what each single part does, and thus be able to expand upon it yourself if new needs show up.
+If you've ever struggled getting to grips with webpack, now is a good time to get started. The stable release of webpack version 2 is out, and this guide will take you from zero to a functional webpack configuration. The end result will be a small, but working React application. The configuration will be expanded one item at a time and will be driven by error messages. By not starting out with a boilerplate, you'll be able to understand what each part does, and thus be able to expand upon it yourself if new needs arise.
 
 ## What is webpack?
 
@@ -21,7 +21,7 @@ This guide will not be covering routing, styling, data fetching, testing or simi
 
 ## Prerequisites
 
-I assume some familiarity with **React**: what it is, what it does, that components are the building blocks and that the **JSX** syntax is a way to render components. At a later stage, familiarity with **Express** is assumed. You should also know how **npm** works. And finally, you should have **Node.js version 4 or newer installed**.
+I assume some familiarity with **React**, namely: what it is, what it does, that components are the building blocks and that the **JSX** syntax is a way to render components. At a later stage, familiarity with **Express** is assumed. You should also know how **npm** works. And finally, you should have **Node.js version 4 or newer installed**.
 
 If all of this is foreign to you, look at the [React documentation](https://facebook.github.io/react/docs/hello-world.html), [npm documentation](https://docs.npmjs.com/getting-started/what-is-npm), and when the need arises, the [Express documentation](http://expressjs.com/en/starter/hello-world.html).
 
@@ -136,6 +136,12 @@ See that Webpack is still building and that the output bundle works:
 
 ```sh
 $ ./node_modules/.bin/webpack && node ./dist/bundle.js
+Hash: b1420f60093b4525b97b
+Version: webpack 2.2.1
+Time: 52ms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  2.53 kB       0  [emitted]  main
+   [0] ./src/index.js 25 bytes {0} [built]
 it works
 ```
 
@@ -151,7 +157,7 @@ class A {
 (new A).hello();
 ```
 
-If you run a recent version of Node.js, this will run perfectly fine. If you want this code to work on older platforms or in browsers, the code will have to be transformed or “transpiled”. We can do this with a tool called [Babel](https://babeljs.io/). Install Babel and a preset for it:
+If you run a recent version of Node.js, this will run perfectly fine. If you want this code to work on older platforms or in browsers, the code will have to be transformed or “transpiled”. We can do this with a tool called [Babel](https://babeljs.io/). Install Babel (`babel-core`), the command line interface (`babel-cli`) and a preset (`babel-preset-env`) for it:
 
 ```sh
 $ npm install --save-dev babel-core babel-cli babel-preset-env
@@ -216,7 +222,7 @@ class A {
 /* end of file omitted for brevity */
 ```
 
-Let's make webpack output the same as the `babel` process. When you add the following section to the top level of the export in `webpack.config.js`, you are telling webpack how to process [modules](https://webpack.js.org/concepts/modules/) whose filename match the regular expression in `test`. In this case webpack will process all javascript files with Babel using the loader `[babel-loader](https://github.com/babel/babel-loader)`:
+Let's make webpack output the same as the `babel` process. When you add the following section to the top level of the export in `webpack.config.js`, you are telling webpack how to process [modules](https://webpack.js.org/concepts/modules/) whose filename match the regular expression in `test`. In this case webpack will process all javascript files with Babel using the loader [`babel-loader`](https://github.com/babel/babel-loader)`:
 
 ```js
 module: {
@@ -246,11 +252,9 @@ Instead of calling webpack directly, add a `build` script in `package.json` that
 
 ```js
 ...
-{
-  "scripts": {
-    "build": "webpack"
-  }
-}
+"scripts": {
+  "build": "webpack"
+},
 ...
 ```
 
@@ -335,6 +339,8 @@ Build the project, and verify that the resulting code actually works now:
 
 ```sh
 $ npm run build && node ./dist/bundle.js
+...
+
 { '$$typeof': Symbol(react.element),
   type: 'h1',
   key: null,
@@ -362,7 +368,8 @@ First, we need some basic HTML to bootstrap the process. Put the following in `s
 </html>
 ```
 
-If you open this in your browser and open the Developer Console, you should see the same output as you saw in your terminal, just represented in a different way.
+If you open this in your browser and open the Developer Console, you should see the same output as you saw in your terminal, just represented in a different way. If you use Chrome, open the console by [pressing `Ctrl + Shift + J` on Windows or `Cmd + Opt + J` on MacOS](https://developers.google.com/web/tools/chrome-devtools/shortcuts#accessing_devtools).
+
 To get the component to render, start by refactoring a bit:
 
 - Change the filename of `src/index.js` to `src/HelloWorld.js`.
@@ -425,7 +432,7 @@ Build the project, refresh `index.html` in the browser and you should see a pret
 
 ![Hello, World!]( https://d2mxuefqeaa7sj.cloudfront.net/s_B5FBF7D9770BEE231DD69DE37D564F31BB1E2EA8749E0BFDEC061C4C846F6B8C_1487232235310_file.png)
 
-If you do not have the React DevTools installed, visit [https://fb.me/react-devtools](https://fb.me/react-devtools) and do so.
+If you do not already have the React DevTools installed, visit [https://fb.me/react-devtools](https://fb.me/react-devtools) and do so.
 
 Once it has been installed, you will see the following message in the developer console:
 
@@ -458,7 +465,7 @@ app.listen(3000, () => {
 });
 ```
 
-Run the server with `node ./src/index.server.js`, open [localhost:3000](http://localhost:3000) and you'll notice that it doesn't contain the "Hello World" text. If you open the Developer Tools, you can see that the `bundle.js` file isn't transferred correctly. This is caused by every request being served by the `get('*', ...)`, which always sends the contents of `index.html`. To fix this, add the following line to `index.server.js`:
+Run the server with `node ./src/index.server.js`, open [localhost:3000](http://localhost:3000) and you'll notice that it doesn't contain the "Hello World" text. If you open the Developer Tools, you can see that the `bundle.js` file isn't transferred correctly. This is caused by every request being served by the `app.get('*', ...)`, which always sends the contents of `index.html`. To fix this, add the following line to `index.server.js`, just before `app.get('*', ...)`:
 
 ```js
 app.use('/static', express.static(path.resolve(__dirname, '../dist')));
@@ -586,20 +593,14 @@ targets: { browsers: '> 5%, last 2 versions' }
 For the Node.js bundle, Babel could output non-functioning code if the capabilities of Node.js are different to those of the targeted browsers. To fix it, change `babelrc.js` to export a function that can return either a browser configuration or a Node.js configuration:
 
 ```js
-module.exports = ({ server } = {}) => {
-  const targets = server
-    ? { node: 'current' }
-    : { browsers: '> 5%, last 2 versions' };
+module.exports = ({ server } = {}) => ({
+  presets: [
+    [ 'env', {
+        targets: server ? { node: 'current' } : { browsers: '> 5%, last 2 versions' }
+    } ],
 
-  return {
-    presets: [
-      [ 'env', {
-              targets: targets
-      } ],
-
-      'react',
-    ],
-  };
+    'react',
+  ],
 };
 ```
 
@@ -650,7 +651,7 @@ const serverConfig = {
 
 When you make a build now, the dependencies won’t be bundled with the application code and the error message has disappeared.
 
-Note that, as mentioned earlier,  the module needs to be included with `require()` because Node.js doesn’t understand `import` statements yet.
+Note that, as mentioned earlier,  the module needs to be included with `require()` because Node.js doesn’t natively understand `import` statements yet.
 
 The next step is making our server render the React code instead of just serving static HTML.
 
@@ -686,6 +687,9 @@ To fix this, the markup that is rendered needs to be inserted into `<div id='roo
 Then, we’ll use the `fs` module in Node.JS to read `index.html` and replace `$react` with the React markup:
 
 ```js
+import fs from 'fs';
+...
+
 app.get('*', (req, res) => {
   const html = fs.readFileSync(path.resolve(__dirname, './index.html')).toString();
   const markup = ReactServer.renderToString(<HelloWorld />);
@@ -694,7 +698,7 @@ app.get('*', (req, res) => {
 });
 ```
 
-Congratulations, you’ve made a universal React app!
+Build, start the server and refresh your browser. Congratulations, you’ve made a universal React app!
 
 ## Adding different environments
 
@@ -741,7 +745,7 @@ plugins: [
 ].filter(e => e),
 ```
 
-The `plugins` array should only contain functions, so the `[.filter(e => e)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)` ensures that non-matching plugins are removed before webpack runs, because they will be [*falsy*](https://developer.mozilla.org/en-US/docs/Glossary/Falsy).
+The `plugins` array should only contain functions, so the [`.filter(e => e)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) ensures that non-matching plugins are removed before webpack runs, because they will be [*falsy*](https://developer.mozilla.org/en-US/docs/Glossary/Falsy).
 
 If you run `npm run build` you should see something like the following:
 
@@ -1005,7 +1009,7 @@ Webpack isn’t the only tool in the pipeline that can have differing configurat
 }
 ```
 
-If you look at the source of `[babel-preset-react](https://github.com/babel/babel/blob/master/packages/babel-preset-react/src/index.js)` [](https://github.com/babel/babel/blob/master/packages/babel-preset-react/src/index.js)that we have activated in our Babel configuration, you will find two very useful plugins that have been commented out. The reason is that the development environment is the default for Babel and these plugins shouldn’t be enabled in production builds. Since we have a specific build for production that properly sets `NODE_ENV` the plugins can safely be added to our configuration. To ensure that the plugins are working, let’s first add an ‘error’. Change the render method of `HelloWorld.js` to the following:
+If you look at the source of [`babel-preset-react`](https://github.com/babel/babel/blob/master/packages/babel-preset-react/src/index.js) that we have activated in our Babel configuration, you will find two very useful plugins that have been commented out. The reason is that the development environment is the default for Babel and these plugins shouldn’t be enabled in production builds. Since we have a specific build for production that properly sets `NODE_ENV` the plugins can safely be added to our configuration. To ensure that the plugins are working, let’s first add an ‘error’. Change the render method of `HelloWorld.js` to the following:
 
 ```js
 render() {
@@ -1103,7 +1107,7 @@ With source maps out of the way, the only thing left is spring cleaning.
 
 ## Final cleanup
 
-The two different webpack configurations, each with their own environmental setup contains a lot of code duplication and could use a refactoring. A lot of what can be done is a matter of style. Multi-file solutions or dependency on tooling like `[webpack-merge](https://github.com/survivejs/webpack-merge)` are some of the options. Try to experiment and see what you prefer. When the configuration is as simple as it is here, I like something like this:
+The two different webpack configurations, each with their own environmental setup contains a lot of code duplication and could use a refactoring. A lot of what can be done is a matter of style. Multi-file solutions or dependency on tooling like [`webpack-merge`](https://github.com/survivejs/webpack-merge) are some of the options. Try to experiment and see what you prefer. When the configuration is as simple as it is here, I like something like this:
 
 ```js
 const path = require('path');
