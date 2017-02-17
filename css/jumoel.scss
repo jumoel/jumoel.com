@@ -201,3 +201,16 @@ pre {
     color: inherit;
   }
 }
+
+.hire-me {
+  margin: -0.8em;
+  padding: 0.8em;
+
+  border: 1px solid $brand-color;
+  border-radius: 0.25rem;
+  background-color: lighten($brand-color, 43%);
+
+  p {
+    margin-bottom: 0;
+  }
+}
