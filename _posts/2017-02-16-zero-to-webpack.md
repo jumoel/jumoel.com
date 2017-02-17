@@ -1234,7 +1234,7 @@ If you've followed along, you should:
 - Know how to add source maps and know that there are different types
 - Be able to build server side bundles as well as client side bundles
 
-I hope this guide has given you the knowledge to be able to better understand other Babel- and webpack configurations. That will let you choose the features *you* want in *your* webpack configuration, instead of having to rely on boilerplates and starter kits. And by knowing what goes on underneath, you can make a more informed decision, *should* you choose to use a starter kit or boilerplate.
+I hope this guide has given you the knowledge to be able to better understand other Babel- and webpack configurations. This will let you choose the features *you* want in *your* webpack configuration, instead of having to rely on boilerplates and starter kits. And by knowing what goes on underneath, you can make a more informed decision, *should* you choose to use a starter kit or boilerplate.
 
 If you are interested in seeing how other people do it, some good places to look are [`create-react-app`](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/config/webpack.config.dev.js) and [`nwb`](https://github.com/insin/nwb/blob/master/src/createWebpackConfig.js).
 
