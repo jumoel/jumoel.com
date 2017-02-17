@@ -11,7 +11,7 @@ If you are new to webpack, it is a system that uses [loaders](https://webpack.js
 
 The advantages of this is that you can write modern javascript applications with modules, import your images and assets as if it were regular javascript and don’t worry about how it will be delivered to the javascript runtime in the end, whether you are targeting Node.js or a browser.
 
-If you need it at some point, the documentation for webpack can be found at https://webpack.js.org.
+If you need it at some point, the documentation for webpack can be found at [webpack.js.org](https://webpack.js.org).
 
 ## What you’ll achieve
 
