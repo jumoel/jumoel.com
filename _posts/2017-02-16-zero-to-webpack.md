@@ -1137,7 +1137,65 @@ node --inspect ./dist/server.js
 
 Webpack [supports a range of different types of source maps](https://webpack.js.org/configuration/devtool/). They each have their own set of advantages and disadvantages and some of them might suit your use case better than others.
 [](https://webpack.js.org/configuration/devtool/)
-With source maps out of the way, the only thing left is spring cleaning.
+
+## Building continuously
+
+It is a bit annoying to make all those builds after every change. Luckily, you can tell webpack to watch your filesystem for changes and rebuild when they occur and doing so is easy. Add a new script to `package.json`:
+
+```json
+...
+"scripts": {
+  "build": "webpack",
+  "build:prod": "cross-env NODE_ENV=production webpack",
+  "watch": "webpack --watch"
+},
+...
+```
+
+Start the `watch` script and notice that it makes an initial build:
+
+```sh
+$ npm run watch
+```
+
+If you make changes to any of your source files, webpack will make a new build automatically. You will unfortunately still need to restart the server script when that has been updated. Let's change that next.
+
+We can use a package called [`nodemon`](https://www.npmjs.com/package/nodemon) to handle running the server script and restart it when the compiled file changes. Let's install it:
+
+```sh
+$ npm install --save-dev nodemon
+```
+
+Add another script to `package.json`:
+
+```json
+...
+  "watch": "webpack --watch",
+  "serve": "nodemon -w dist/server.js dist/server.js"
+...
+```
+
+The `-w <path>` argument tells `nodemon` what to monitor for changes. The second instance of `dist/server.js` indicates which file should be run.
+
+If you run `npm run watch` in one terminal instance and `npm run serve` in another, any changes you make to your server should now also be picked up automatically. There are a lot of ways to run these two commands in parallel. We'll use the package [`concurrently`](https://www.npmjs.com/package/concurrently) to avoid having to deal with cross platform differences. Install it with `npm`:
+
+```sh
+$ npm install --save-dev concurrently
+```
+
+And add a new script to run it:
+
+```json
+...
+  "watch": "webpack --watch",
+  "serve": "nodemon -w dist/server.js dist/server.js",
+  "watch-and-serve": "concurrently --kill-others \"npm run watch\" \"npm run serve\""
+...
+```
+
+This starts the two `npm` commands at the same time, and kills the other should one of them crash (`--kill-others`).
+
+With that done, all that is left is spring cleaning.
 
 ## Final cleanup
 
