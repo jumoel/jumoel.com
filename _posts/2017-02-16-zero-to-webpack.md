@@ -9,11 +9,11 @@ If you've ever struggled getting to grips with webpack, now is a good time to ge
 
 If you are new to webpack, it is a system that uses [loaders](https://webpack.js.org/concepts/loaders/) to preprocess files (javascript, css, images, and [whatever other source files you can imagine](https://www.npmjs.com/search?q=webpack-loader)) and pack them into bundles.
 
-The advantages of this is that you can write modern javascript applications with modules, import your images and assets as if it were regular javascript and don’t worry about how it will be delivered to the javascript runtime in the end, whether you are targeting Node.js or a browser.
+The advantages of this is that you can write modern javascript applications with modules, import your images and assets as if it were regular javascript and don't worry about how it will be delivered to the javascript runtime in the end, whether you are targeting Node.js or a browser.
 
 If you need it at some point, the documentation for webpack can be found at [webpack.js.org](https://webpack.js.org).
 
-## What you’ll achieve
+## What you'll achieve
 
 The goal of this post is to take you from nothing to a functioning webpack configuration for React with modern javascript, but will be easy to adapt to other technologies such as TypeScript and Angular. The application will use universal rendering and the configuration will cover both client and server applications as well as different output for different environments.
 
@@ -181,7 +181,7 @@ By specifying a target of Node.js version 4, we can ensure that Babel actually d
 $ ./node_modules/.bin/babel src/index.js -o dist/bundle.js
 ```
 
-Verify that Babel transformed the code by looking at the output file. Pay special attention to the part beginning with `var A = ...`, as that is our transformed application code. The rest is Babel’s responsibility:
+Verify that Babel transformed the code by looking at the output file. Pay special attention to the part beginning with `var A = ...`, as that is our transformed application code. The rest is Babel's responsibility:
 
 ```sh
 $ cat ./dist/bundle.js
@@ -414,7 +414,16 @@ const root = document.getElementById('root');
 ReactDOM.render(<HelloWorld />, root);
 ```
 
-Try to compile (with `npm run build`) and notice that it doesn't work anymore. To get webpack to build our bundle again, change the entrypoint in `webpack.config.js` to `./src/index.browser.js`. At the same time, change the `target` in `babelrc.js` to browsers instead of Node.js:
+Try to compile (with `npm run build`) and notice that it doesn't work anymore. To get webpack to build our bundle again, change the entrypoint in `webpack.config.js` to `./src/index.browser.js`:
+
+```js
+module.exports = {
+    entry: path.resolve('./src/index.browser.js'),
+    ...
+};
+```
+
+At the same time, change the `target` in `babelrc.js` to browsers instead of Node.js:
 
 ```js
 module.exports = {
@@ -442,7 +451,7 @@ Let's fix the error about not using an HTTP server.
 
 ## Adding a server
 
-We’ll use the [Express](https://expressjs.com/) webserver, which is the de facto standard server for Node.js, to serve the application:
+We'll use the [Express](https://expressjs.com/) webserver, which is the de facto standard server for Node.js, to serve the application:
 
 ```sh
 $ npm install --save express
@@ -481,7 +490,7 @@ Restart the server, reload your browser and behold "Hello World" in all its glor
 
 ## Modernizing the server
 
-To keep the server code consistent with the client code, let’s change the `const … = require('…')` to `import … from '…'`. Modify `index.server.js` to look like:
+To keep the server code consistent with the client code, let's change the `const module = require('module')` to `import module from 'module'`. Modify `index.server.js` to look like:
 
 ```js
 import path from 'path';
@@ -490,9 +499,9 @@ import express from 'express';
 ...
 ```
 
-Besides consistency, `import` statements have a few advantages compared to `require()` calls. One of them is that the `import` statements can be analyzed statically whereas `require()` cannot. We’ll take advantage of this later.
+Besides consistency, `import` statements have a few advantages compared to `require()` calls. One of them is that the `import` statements can be analyzed statically whereas `require()` cannot. We'll take advantage of this later.
 
-If you try to run the server, you’ll notice that it doesn’t work anymore:
+If you try to run the server, you'll notice that it doesn't work anymore:
 
 ```sh
 $ node ./src/index.server.js
@@ -501,7 +510,7 @@ SyntaxError: Unexpected token import
 ...
 ```
 
-Node.js doesn’t understand the `import`. For it to work, we need to build the server with webpack as well. Because the `import` statements require a processing step, we unfortunately need to keep using `const … = require('…')` in the webpack config. You *could* add a separate step to process the config file as well, but then the build system becomes convoluted.
+Node.js doesn't understand the `import`. For it to work, we need to build the server with webpack as well. Because the `import` statements require a processing step, we unfortunately need to keep using `const … = require('…')` in the webpack config. You *could* add a separate step to process the config file as well, but then the build system becomes convoluted.
 
 To process the server, we can utilize that a webpack configuration can consist of multiple configurations if they are exported as an array. Add a copy of the current configuration and export both, changing the entrypoint, output filename and target:
 
@@ -567,24 +576,40 @@ Ignore the error warning from `./~/express/lib/view.js` about a critical depende
 $ node ./dist/server.js
 ```
 
-When you open [localhost:3000](http://localhost:3000), you’ll see:
+When you open [localhost:3000](http://localhost:3000), you'll see:
 
 ```text
 Error: ENOENT: no such file or directory, stat '/index.html'
 ```
 
-It seems that the Express server can’t find the HTML file we are trying to send as a response to the browser. This is caused by the usage of `__dirname` and a (for the moment) [little-documented](https://webpack.js.org/configuration/node/) fact of webpack: A number of Node.js features are replaced or transformed by webpack, and `__dirname` is one of them. If you add a toplevel `node` attribute to the server webpack configuration, you can control what happens with, for instance, `__dirname`. [By experimenting](https://github.com/webpack/webpack/issues/1599#issuecomment-260077616), you will discover that setting `node.__dirname` to nothing, `true` or `false`, results in varying functionality:
+Note that the error message on Windows will look slighty different.
+
+It seems that the Express server can't find the HTML file we are trying to send as a response to the browser. This is caused by the usage of `__dirname` and a (for the moment) [little-documented](https://webpack.js.org/configuration/node/) fact of webpack: A number of Node.js features are replaced or transformed by webpack, and `__dirname` is one of them. If you add a toplevel `node` attribute to the server webpack configuration, you can control what happens with, for instance, `__dirname`. [By experimenting](https://github.com/webpack/webpack/issues/1599#issuecomment-260077616), you will discover that setting `node.__dirname` to nothing, `true` or `false`, results in varying functionality:
 
 
 - Not set or `undefined`: `__dirname` is set to `/`.
 - `true`: sets `_dirname` to what it was in the source file. `./src/` in our case.
 - `false`: set `__dirname` to the regular Node.js functionality. In our case, it would resolve to `./dist/`.
 
-To make the source code easier to reason about when it comes to filepaths, we’ll set `node.__dirname` to `true` in the `serverConfig`. That way the path that is currently present in `src/index.server.js` will continue to work when the bundle has been built. Once you’ve set the attribute in the webpack config, make a new build and verify that “Hello World” is back in the browser.
+To make the source code easier to reason about when it comes to filepaths, we'll set `node.__dirname` to `true` in the `serverConfig`:
+
+```js
+const serverConfig = {
+  target: 'node',
+
+  node: {
+    __dirname: true
+  },
+
+  ...
+};
+```
+
+That way the path that is currently present in `src/index.server.js` will continue to work when the bundle has been built. Once you've set the attribute in the webpack config, make a new build, restart the server and verify that “Hello World” is back in the browser.
 
 ## Differentiating Babel configuration for the different runtimes
 
-Right now, the Babel configuration is the same for the Node.js target as well as the browsers. This works, but isn’t correct since `babelrc.js` contains the line:
+Right now, the Babel configuration is the same for the Node.js target as well as the browsers. This works, but isn't correct since `babelrc.js` contains the line:
 
 ```js
 targets: { browsers: '> 5%, last 2 versions' }
@@ -601,7 +626,7 @@ module.exports = ({ server } = {}) => ({
 
     'react',
   ],
-};
+});
 ```
 
 Then, put the following at the top of `webpack.config.js`:
@@ -613,16 +638,16 @@ const createBabelConfig = require('./babelrc');
 Finally, replace the `query: require('./babelrc)` in the `clientConfig` with:
 
 ```js
-query: createBabelConfig()
+query: createBabelConfig(),
 ```
 
 The corresponding line in `serverConfig` should be replaced with:
 
 ```js
-query: createBabelConfig({ server: true })
+query: createBabelConfig({ server: true }),
 ```
 
-Now Babel includes the correct required plugins and presets for the two different environments.
+Now Babel includes the correct required plugins and presets for the two different environments. Make a new build, restart the server and verify that everything still works.
 
 ## Optimizing what is bundled
 
@@ -632,7 +657,7 @@ If we return to the error message that was emitted by `./~/express/lib/view.js`:
 Critical dependency: the request of a dependency is an expression
 ```
 
-The code that causes the warning doesn’t matter at the moment, but the warning occurs because webpack is trying to include the Node.js dependencies and build those as well. In general, these are already built, so to avoid this, it’s possible to specify [externals](https://webpack.js.org/configuration/externals/). Externals are modules that webpack won’t include in a build. The easiest way to omit our Node.js dependencies from the build is to use the package `webpack-node-externals`:
+The code that causes the warning doesn't matter at the moment, but the warning occurs because webpack is trying to include the Node.js dependencies and build those as well. In general, these are already built, so to avoid this, it's possible to specify [externals](https://webpack.js.org/configuration/externals/). Externals are modules that webpack won't include in a build. The easiest way to omit our Node.js dependencies from the build is to use the package `webpack-node-externals`:
 
 ```sh
 $ npm install --save-dev webpack-node-externals
@@ -649,15 +674,13 @@ const serverConfig = {
 ...
 ```
 
-When you make a build now, the dependencies won’t be bundled with the application code and the error message has disappeared.
-
-Note that, as mentioned earlier,  the module needs to be included with `require()` because Node.js doesn’t natively understand `import` statements yet.
+When you make a build now, the dependencies won't be bundled with the application code and the error message has disappeared. Refresh your browser and verify that "Hello, World!" still shows up.
 
 The next step is making our server render the React code instead of just serving static HTML.
 
 ## Getting to universal React rendering
 
-The first step in converting the application to being universal (what was previously known as *isomorphic*) is rendering the DOM on the server, before the browser takes over. The `react-dom` package contains a `server` module in `[react-dom/server](https://facebook.github.io/react/docs/react-dom-server.html)` that contains functionality for just this purpose.
+The first step in converting the application to being universal (what was previously known as *isomorphic*) is rendering the DOM on the server, before the browser takes over. The `react-dom` package contains a `server` module in [`react-dom/server`](https://facebook.github.io/react/docs/react-dom-server.html) that contains functionality for exactly this purpose.
 
 We can use the exported `renderToString` method to render the markup for the app. To do that, we need the following imports in `index.server.js`:
 
@@ -676,7 +699,7 @@ app.get('*', (req, res) => {
 });
 ```
 
-If you build and run the server, you should still have “Hello World” in your browser. But the skeleton of the HTML is missing and React isn’t loaded, so any dynamic features you implement won’t work.
+If you build and run the server, you should still have “Hello World” in your browser. But the skeleton of the HTML is missing and React isn't loaded, so any dynamic features you implement won't work.
 
 To fix this, the markup that is rendered needs to be inserted into `<div id='root'></div>` in `index.html`. An easy way to achieve that is to insert some text that can be replaced with the markup. Change the `<div>` to look like this:
 
@@ -684,7 +707,7 @@ To fix this, the markup that is rendered needs to be inserted into `<div id='roo
 <div id='root'>$react</div>
 ```
 
-Then, we’ll use the `fs` module in Node.JS to read `index.html` and replace `$react` with the React markup:
+Then, we'll use the `fs` module in Node.JS to read `index.html` and replace `$react` with the React markup:
 
 ```js
 import fs from 'fs';
@@ -698,11 +721,11 @@ app.get('*', (req, res) => {
 });
 ```
 
-Build, start the server and refresh your browser. Congratulations, you’ve made a universal React app!
+Build, start the server and refresh your browser. Congratulations, you've made a universal React app!
 
 ## Adding different environments
 
-At some point, the need will arise for different configurations for different environments. React contains quite a lot of code that should be removed before running the code in production environments. It will reduce the size of the bundle that is sent to users as well as speed up runtime. Adding support for different environments will ensure that these plugins and libraries won’t be enabled unless they are needed.
+At some point, the need will arise for different configurations for different environments. React contains quite a lot of code that should be removed before running the code in production environments. It will reduce the size of the bundle that is sent to users as well as speed up runtime. Adding support for different environments will ensure that these plugins and libraries won't be enabled unless they are needed.
 
 The first step is creating a new script in `package.json` for building the production version of our app:
 
@@ -710,14 +733,20 @@ The first step is creating a new script in `package.json` for building the produ
 ...
 "scripts": {
   "build": "webpack",
-  "build:prod": "NODE_ENV=production webpack"
+  "build:prod": "cross-env NODE_ENV=production webpack"
 },
 ...
 ```
 
 This will allow us to differentiate what the webpack config will look like based on the value of `process.env.NODE_ENV`.
 
-The first thing we want to do is enable minifaction of the output bundle. That can be done by having a plugin in the `production` environment handle that task. Webpack comes with a [bundled plugin](https://webpack.js.org/plugins/uglifyjs-webpack-plugin/) for [UglifyJS](http://lisperator.net/uglifyjs), which is a code minifier, but unfortunately UglifyJS doesn’t work with modern javascript such as classes. Instead, use the `babili` minifier, based on Babel. It can either be installed directly as a [Babel preset](https://github.com/babel/babili/tree/master/packages/babel-preset-babili) or as a [webpack plugin](https://github.com/boopathi/babili-webpack-plugin). The preset works on original source files whereas the webpack plugin works on bundled output. We are going to use the plugin because it provides better results than the raw preset for our use case, that consists of combined bundles.
+It uses the [`cross-env`](https://github.com/kentcdodds/cross-env) library to set environment variables, so it works whether you use Windows, MacOS or Linux. It needs to be installed before we can use it:
+
+```sh
+$ npm install --save-dev cross-env
+```
+
+The first thing we want to do is enable minifaction of the output bundle. That can be done by having a plugin in the `production` environment handle that task. Webpack comes with a [bundled plugin](https://webpack.js.org/plugins/uglifyjs-webpack-plugin/) for [UglifyJS](http://lisperator.net/uglifyjs), which is a code minifier, but unfortunately UglifyJS doesn't work with modern javascript such as classes. Instead, use the `babili` minifier, based on Babel. It can either be installed directly as a [Babel preset](https://github.com/babel/babili/tree/master/packages/babel-preset-babili) or as a [webpack plugin](https://github.com/boopathi/babili-webpack-plugin). The preset works on original source files whereas the webpack plugin works on bundled output. We are going to use the plugin because it provides better results than the raw preset for our use case, that consists of combined bundles.
 
 First, add a shorthand determining if we are in the correct environment at the top of `webpack.config.js`:
 
@@ -785,7 +814,9 @@ Child
         + 5 hidden modules
 ```
 
-Take note of the two bundle sizes: **728 kB** and **6.98 kB**. Now, let’s run `npm run build:prod`:
+Take note of the two bundle sizes: **728 kB** and **6.98 kB** and note that the sizes on your machine might be a little bit different.
+
+Let's run `npm run build:prod`:
 
 ```sh
 > NODE_ENV=production webpack
@@ -831,7 +862,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 
-These aren’t removed by Babili because it cannot know that `process.env.NODE_ENV` is equal to `production`. To fix this, we can add [another webpack plugin](https://webpack.js.org/plugins/define-plugin/), that defines constants in the code. It also enables us to keep parity between the server and the client, by allowing the use of `process.env.NODE_ENV` (and friends), even in client-side code. Add the following to both of the `plugins` arrays:
+These aren't removed by Babili because it cannot know that `process.env.NODE_ENV` is equal to `production`. To fix this, we can add [another webpack plugin](https://webpack.js.org/plugins/define-plugin/), that defines constants in the code. It also enables us to keep parity between the server and the client, by allowing the use of `process.env.NODE_ENV` (and friends), even in client-side code. Add the following to both of the `plugins` arrays:
 
 ```js
 new webpack.DefinePlugin({
@@ -881,7 +912,7 @@ The browser script in `bundle.js` has been reduced even further to **144 kB**.
 
 Note, that while it might seem weird to minify the server side code, it actually [has a reason](https://www.youtube.com/watch?v=FXyM1yrtloc&feature=youtu.be&t=7m30s). Every NodeJS function with a body of less than 600 characters, *including comments,* will be inlined. 601 characters and higher and the function will be called as a function, which incurs a substantial overhead. To be safe, minify.
 
-Now that we’ve spent a lot of time optimizing our browser bundle and our server application code, we should probably also use optimized React builds on the server. If you look in the `dist` folders of `react` and `react-dom` you’ll see the following files:
+Now that we've spent a lot of time optimizing our browser bundle and our server application code, we should probably also use optimized React builds on the server. If you look in the `dist` folders of `react` and `react-dom` you'll see the following files:
 
 ```sh
 $ tree ./node_modules/react*/dist
@@ -899,7 +930,7 @@ node_modules/react/dist
 
 The files we are interested in are `react-dom-server.min.js`,  which corresponds to the `react-dom/server` module and `react.min.js` which corresponds to the `react` module.
 
-If we want the optimized builds, we need to include them in our bundle output. To do this, we can utilize the `[resolve.alias](https://webpack.js.org/configuration/resolve/#resolve-alias)` property in the `serverConfig` in `webpack.config.js` to map the React libraries to their minified versions:
+If we want the optimized builds, we need to include them in our bundle output. To do this, we can utilize the [`resolve.alias`](https://webpack.js.org/configuration/resolve/#resolve-alias) property in the `serverConfig` in `webpack.config.js` to map the React libraries to their minified versions:
 
 ```js
 resolve: {
@@ -910,7 +941,7 @@ resolve: {
 }
 ```
 
-If you make a build, you can see that the server bundle hasn’t increased in size, even though we wanted to include `react` and `react-dom` in it. It is caused by the `externals` property which specifies that `react` and `react-dom` *shouldn’t* be included in the server bundle after all. The result is that the `alias` setting has no effect. The fix is fortunately simple. The method supplied by the `webpack-node-externals` module takes an optional `[options](https://github.com/liady/webpack-node-externals#configuration)` [object](https://github.com/liady/webpack-node-externals#configuration) as parameter. One of the properties available is `whitelist`, which specifies which modules shouldn’t be marked as external, even though they are Node.js dependencies. By changing `nodeExternals()` to the following, `react` and `react-dom/server` will be included in the bundle with their minified files when making a production build:
+If you make a build, you can see that the server bundle hasn't increased in size, even though we wanted to include `react` and `react-dom` in it. It is caused by the `externals` property which specifies that `react` and `react-dom` *shouldn't* be included in the server bundle after all. The result is that the `alias` setting has no effect. The fix is fortunately simple. The method supplied by the `webpack-node-externals` module takes an optional [`options` object](https://github.com/liady/webpack-node-externals#configuration) as parameter. One of the properties available is `whitelist`, which specifies which modules shouldn't be marked as external, even though they are Node.js dependencies. By changing `nodeExternals()` to the following, `react` and `react-dom/server` will be included in the bundle with their minified files when making a production build:
 
 ```js
 externals: [ nodeExternals({
@@ -939,7 +970,7 @@ Child
         + 3 hidden modules
 ```
 
-One thing sticks out, though. Since we are already using Babili to minify the code, it doesn’t really make sense to use the minified files. Doing so also makes the webpack configuration more complicated. Remove the `resolve.alias`, make a production build and let webpack do its thing:
+One thing sticks out, though. Since we are already using Babili to minify the code, it doesn't really make sense to use the minified files. Doing so also makes the webpack configuration more complicated. Remove the `resolve.alias`, make a production build and let webpack do its thing:
 
 ```sh
 > NODE_ENV=production webpack
@@ -991,11 +1022,11 @@ module.exports = ({ server } = {}) => ({
 });
 ```
 
-Note that tree shaking only works with `import` statements and not `require()` calls, because `import` statements are, as mentioned earlier, statically analyzable.
+Note that tree shaking only works with `import` statements and not `require()` calls, because `import` statements are, as mentioned earlier, statically analyzable. Tree shaking will not make a difference in the bundle sizes the project in its current state. Once you write more code and import more packages, tree shaking will start to have an effect.
 
 ## Getting more information during development
 
-Webpack isn’t the only tool in the pipeline that can have differing configurations based on environments. Babel can also enable plugins in specific environments only by nesting the configuration under the `env.``*environment*` key like so:
+Webpack isn't the only tool in the pipeline that can have differing configurations based on environments. Babel can also enable plugins in specific environments only by nesting the configuration under the `env.<environment>` key like so:
 
 ```js
 {
@@ -1009,7 +1040,7 @@ Webpack isn’t the only tool in the pipeline that can have differing configurat
 }
 ```
 
-If you look at the source of [`babel-preset-react`](https://github.com/babel/babel/blob/master/packages/babel-preset-react/src/index.js) that we have activated in our Babel configuration, you will find two very useful plugins that have been commented out. The reason is that the development environment is the default for Babel and these plugins shouldn’t be enabled in production builds. Since we have a specific build for production that properly sets `NODE_ENV` the plugins can safely be added to our configuration. To ensure that the plugins are working, let’s first add an ‘error’. Change the render method of `HelloWorld.js` to the following:
+If you look at the source of [`babel-preset-react`](https://github.com/babel/babel/blob/master/packages/babel-preset-react/src/index.js) that we have activated in our Babel configuration, you will find two very useful plugins that have been commented out. The reason is that the development environment is the default for Babel and these plugins shouldn't be enabled in production builds. Since we have a specific build for production that properly sets `NODE_ENV` the plugins can safely be added to our configuration. To ensure that the plugins are working, let's first add an ‘error'. Change the render method of `HelloWorld.js` to the following:
 
 ```js
 render() {
@@ -1017,13 +1048,13 @@ render() {
 }
 ```
 
-This code doesn’t set the `key` property of the children in the loop like it should. If you make non-production build, view the site in your browser and open the Developer Console, something like the following will show up:
+This code doesn't set the `key` property of the children in the loop like it should. If you make non-production build, view the site in your browser and open the Developer Console, something like the following will show up:
 
 > Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `HelloWorld`. See https://fb.me/react-warning-keys for more information.
 > in span (created by HelloWorld)
 > in HelloWorld
 
-Not that informative, since we can’t tell in which file the error originated, so let’s install those plugins:
+Not that informative, since we can't tell in which file the error originated, so let's install those plugins:
 
 ```sh
 $ npm install --save-dev babel-plugin-transform-react-jsx-self \
@@ -1056,7 +1087,7 @@ Much better, as we know actually have a chance of finding the location of our bu
 
 ## Adding source maps
 
-To aid the bug finding even more, we can add a last property to the webpack client config. `devtool` specifies which type of source map, if any, is generated. For development `cheap-module-eval-source-map` is a good choice as it is fairly fast, shows line numbers and most importantly show the original code. For production `source-map` is a safe choice. It’s pretty slow, but gives good results. The slowness doesn’t matter as much as production builds are not made that often. Add the following to `clientConfig`:
+To aid the bug finding even more, we can add a last property to the webpack client config. `devtool` specifies which type of source map, if any, is generated. For development `cheap-module-eval-source-map` is a good choice as it is fairly fast, shows line numbers and most importantly show the original code. For production `source-map` is a safe choice. It's pretty slow, but gives good results. The slowness doesn't matter as much as production builds are not made that often. Add the following to `clientConfig`:
 
 ```js
 devtool: PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
@@ -1064,7 +1095,7 @@ devtool: PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
 
 For the server, source maps is a bit more muddy. The only `devtool` option that I have found to work is `source-map`. But to actually get them to show, we need two additional tools: One that maps source maps to Node.js stack trace API and another that enables this tool for every output file.
 
-The first is `source-map-support`, so let’s install it:
+The first is `source-map-support`, so let's install it:
 
 ```sh
 $ npm install --save-dev source-map-support
@@ -1196,7 +1227,7 @@ And with that, we are done.
 
 ## What has been achieved?
 
-If you’ve followed along, you should:
+If you've followed along, you should:
 
 - Have a feeling for how to build a modular webpack config
 - Know how to configure Babel and how to differentiate between environments
@@ -1219,3 +1250,7 @@ Even though a lot has been covered, here are some other things that you might st
 - How to [name your output bundles so you can aggressively cache them](https://webpack.js.org/guides/caching/)
 
 Have fun!
+
+---
+
+**Thanks** to [Emil Christensen](https://www.linkedin.com/in/emilchristensen) for reading drafts of this.
