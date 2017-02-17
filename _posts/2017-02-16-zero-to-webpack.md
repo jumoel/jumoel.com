@@ -862,6 +862,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 
+<a name="webpack-defineplugin"></a>
 These aren't removed by Babili because it cannot know that `process.env.NODE_ENV` is equal to `production`. To fix this, we can add [another webpack plugin](https://webpack.js.org/plugins/define-plugin/), that defines constants in the code. It also enables us to keep parity between the server and the client, by allowing the use of `process.env.NODE_ENV` (and friends), even in client-side code. Add the following to both of the `plugins` arrays:
 
 ```js
@@ -912,6 +913,7 @@ The browser script in `bundle.js` has been reduced even further to **144 kB**.
 
 Note, that while it might seem weird to minify the server side code, it actually [has a reason](https://www.youtube.com/watch?v=FXyM1yrtloc&feature=youtu.be&t=7m30s). Every NodeJS function with a body of less than 600 characters, *including comments,* will be inlined. 601 characters and higher and the function will be called as a function, which incurs a substantial overhead. To be safe, minify.
 
+<a name="webpack-alias"></a>
 Now that we've spent a lot of time optimizing our browser bundle and our server application code, we should probably also use optimized React builds on the server. If you look in the `dist` folders of `react` and `react-dom` you'll see the following files:
 
 ```sh
@@ -1050,9 +1052,11 @@ render() {
 
 This code doesn't set the `key` property of the children in the loop like it should. If you make non-production build, view the site in your browser and open the Developer Console, something like the following will show up:
 
-> Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `HelloWorld`. See https://fb.me/react-warning-keys for more information.
-> in span (created by HelloWorld)
-> in HelloWorld
+```text
+Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `HelloWorld`. See https://fb.me/react-warning-keys for more information.
+in span (created by HelloWorld)
+in HelloWorld
+```
 
 Not that informative, since we can't tell in which file the error originated, so let's install those plugins:
 
@@ -1079,9 +1083,11 @@ module.exports = ({ server } = {}) => ({
 
 Re-build, refresh the browser and the message in the console now looks like:
 
-> Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `HelloWorld`. See https://fb.me/react-warning-keys for more information.
-> in span (at HelloWorld.js:6)
-> in HelloWorld (at index.browser.js:7)
+```text
+Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `HelloWorld`. See https://fb.me/react-warning-keys for more information.
+in span (at HelloWorld.js:6)
+in HelloWorld (at index.browser.js:7)
+```
 
 Much better, as we know actually have a chance of finding the location of our bug.
 
@@ -1103,6 +1109,7 @@ The first is `source-map-support`, so let's install it:
 $ npm install --save-dev source-map-support
 ```
 
+<a name="webpack-bannerplugin"></a>
 To make it, the plugin needs to have some code inserted at the top of all the output files. Webpack includes a plugin called `BannerPlugin` that does exactly this: Insert text at the top of every output file. Add it to the `plugins` array in the `serverConfig` object:
 
 ```js
@@ -1225,14 +1232,14 @@ And with that, we are done.
 
 If you've followed along, you should:
 
-- Have a feeling for how to build a modular webpack config
-- Know how to configure Babel and how to differentiate between environments
-- Utilize Babel plugins and presets to transform the source code
-- Utilize environments to alter the webpack bundle outputs
-- Know how to redirect modules with aliases
-- Be able to add content to the output files or replace content in the source files
-- Know how to add source maps and know that there are different types
-- Be able to build server side bundles as well as client side bundles
+- Know how to [configure Babel](#transforming-code-with-babel) and how to [differentiate between environments](#getting-more-information-during-development)
+- Utilize Babel [presets](#transforming-code-with-babel) and [plugins](#getting-more-information-during-development) to transform the source code
+- Utilize [environments](#adding-different-environments) to alter the webpack bundle outputs
+- Know how to redirect modules with [aliases](#webpack-alias)
+- Be able to [add content](#webpack-bannerplugin) to the output files or [replace content](#webpack-defineplugin) in the source files
+- Know how to [add source maps](#adding-source-maps) and know that there are different types
+- Be able to [build server side bundles](#modernizing-the-server) as well as client side bundles
+- Have a feeling for how to [build a modular webpack config](#final-cleanup)
 
 I hope this guide has given you the knowledge to be able to better understand other Babel- and webpack configurations. This will let you choose the features *you* want in *your* webpack configuration, instead of having to rely on boilerplates and starter kits. And by knowing what goes on underneath, you can make a more informed decision, *should* you choose to use a starter kit or boilerplate.
 
