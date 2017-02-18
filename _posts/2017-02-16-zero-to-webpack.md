@@ -865,7 +865,7 @@ Child
 The sizes have been reduced to **221 kB** and **2.53 kB**. A reduction of 70% and 63%. But it can become even lower.
 
 ---
-
+<a name="babili-adventure"></a>
 **NOTE FOR THE ADVENTUROUS:** If you want to try out a minifier that understands modern javascript, you can use the `babili` minifier, based on Babel. It can either be installed directly as a [Babel preset](https://github.com/babel/babili/tree/master/packages/babel-preset-babili) or as a [webpack plugin](https://github.com/boopathi/babili-webpack-plugin). The preset works on original source files whereas the webpack plugin works on bundled output. In this case, you should use the plugin because it provides better results for our use case with bundled output.
 
 First, you would need to install it:
