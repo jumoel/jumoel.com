@@ -429,7 +429,7 @@ At the same time, change the `target` in `babelrc.js` to browsers instead of Nod
 module.exports = {
   presets: [
     [ 'env', {
-      targets: { browsers: '> 5%, last 2 versions' }
+      targets: { browsers: ['> 5%', 'last 2 versions'] }
     } ],
 
     'react',
@@ -612,7 +612,7 @@ That way the path that is currently present in `src/index.server.js` will contin
 Right now, the Babel configuration is the same for the Node.js target as well as the browsers. This works, but isn't correct since `babelrc.js` contains the line:
 
 ```js
-targets: { browsers: '> 5%, last 2 versions' }
+targets: { browsers: ['> 5%', 'last 2 versions'] }
 ```
 
 For the Node.js bundle, Babel could output non-functioning code if the capabilities of Node.js are different to those of the targeted browsers. To fix it, change `babelrc.js` to export a function that can return either a browser configuration or a Node.js configuration:
@@ -621,7 +621,7 @@ For the Node.js bundle, Babel could output non-functioning code if the capabilit
 module.exports = ({ server } = {}) => ({
   presets: [
     [ 'env', {
-        targets: server ? { node: 'current' } : { browsers: '> 5%, last 2 versions' }
+        targets: server ? { node: 'current' } : { browsers: ['> 5%', 'last 2 versions'] }
     } ],
 
     'react',
@@ -746,7 +746,21 @@ It uses the [`cross-env`](https://github.com/kentcdodds/cross-env) library to se
 $ npm install --save-dev cross-env
 ```
 
-The first thing we want to do is enable minifaction of the output bundle. That can be done by having a plugin in the `production` environment handle that task. Webpack comes with a [bundled plugin](https://webpack.js.org/plugins/uglifyjs-webpack-plugin/) for [UglifyJS](http://lisperator.net/uglifyjs), which is a code minifier, but unfortunately UglifyJS doesn't work with modern javascript such as classes. Instead, use the `babili` minifier, based on Babel. It can either be installed directly as a [Babel preset](https://github.com/babel/babili/tree/master/packages/babel-preset-babili) or as a [webpack plugin](https://github.com/boopathi/babili-webpack-plugin). The preset works on original source files whereas the webpack plugin works on bundled output. We are going to use the plugin because it provides better results than the raw preset for our use case, that consists of combined bundles.
+The first thing we want to do is enable minifaction of the output bundle. That can be done by having a plugin in the `production` environment handle that task. Webpack comes with a [bundled plugin](https://webpack.js.org/plugins/uglifyjs-webpack-plugin/) for [UglifyJS](http://lisperator.net/uglifyjs), which is a code minifier. Unfortunately UglifyJS doesn't yet work with modern javascript such as classes. That means that we need Babel to transform more code than it might actually have to, so Uglify can make the code smaller. We need to ensure that Babel will transform the features Uglify doesn't understand by targeting platforms that also don't understand them.
+
+Change the `node` and `browsers` targets in `babelrc.js` to the following:
+
+```js
+module.exports = ({ server } = {}) => ({
+  presets: [
+    [ 'env', {
+        targets: server ? { node: 4 } : { browsers: ['> 5%', 'last 2 versions', 'ie 11'] }
+    } ],
+
+    'react',
+  ],
+});
+```
 
 First, add a shorthand determining if we are in the correct environment at the top of `webpack.config.js`:
 
@@ -754,23 +768,17 @@ First, add a shorthand determining if we are in the correct environment at the t
 const PRODUCTION = process.env.NODE_ENV === 'production';
 ```
 
-Then, install the minifier plugin:
-
-```sh
-$ npm install --save-dev babili-webpack-plugin
-```
-
-Import the module at the top of `webpack.config.js`:
+Then, make a shorthand for the minifier at the top of `webpack.config.js`:
 
 ```js
-const BabiliPlugin = require("babili-webpack-plugin");
+const MinifierPlugin = webpack.optimize.UglifyJSPlugin;
 ```
 
 Finally, add the following property to both the `clientConfig` and `serverConfig`:
 
 ```js
 plugins: [
-  PRODUCTION && new BabiliPlugin(),
+  PRODUCTION && new MinifierPlugin(),
 ].filter(e => e),
 ```
 
@@ -854,7 +862,47 @@ Child
         + 5 hidden modules
 ```
 
-The sizes have been reduced to **221 kB** and **2.53 kB**. A reduction of 70% and 63%. But it can become even lower. The React code contains code paths that are put in `if`-blocks like the following:
+The sizes have been reduced to **221 kB** and **2.53 kB**. A reduction of 70% and 63%. But it can become even lower.
+
+---
+
+**NOTE FOR THE ADVENTUROUS:** If you want to try out a minifier that understands modern javascript, you can use the `babili` minifier, based on Babel. It can either be installed directly as a [Babel preset](https://github.com/babel/babili/tree/master/packages/babel-preset-babili) or as a [webpack plugin](https://github.com/boopathi/babili-webpack-plugin). The preset works on original source files whereas the webpack plugin works on bundled output. In this case, you should use the plugin because it provides better results for our use case with bundled output.
+
+First, you would need to install it:
+
+```sh
+$ npm install --save-dev babili-webpack-plugin
+```
+
+Then you would need to change the declaration of `MinifierPlugin` to point to Babili:
+
+```js
+const MinifierPlugin = require('babili-webpack-plugin');
+```
+
+And lastly, you should change the `node` target in `babelrc.js` from `4` to `current`. You could also remove support for IE 11 if you want:
+
+```js
+module.exports = ({ server } = {}) => ({
+  presets: [
+    [ 'env', {
+        targets: server ? { node: 'current' } : { browsers: ['> 5%', 'last 2 versions'] }
+    } ],
+
+    'react',
+  ],
+});
+```
+
+But do beware: [Babili has a few bugs](https://github.com/babel/babili/issues?q=is%3Aissue+is%3Aopen+label%3Abug).
+
+---
+
+And now, back to the regular schedule again.
+
+## Replacing content in the source code
+
+The React code contains code paths that are put in `if`-blocks like the following:
 
 ```js
 if (process.env.NODE_ENV !== 'production') {
@@ -863,7 +911,7 @@ if (process.env.NODE_ENV !== 'production') {
 ```
 
 <a name="webpack-defineplugin"></a>
-These aren't removed by Babili because it cannot know that `process.env.NODE_ENV` is equal to `production`. To fix this, we can add [another webpack plugin](https://webpack.js.org/plugins/define-plugin/), that defines constants in the code. It also enables us to keep parity between the server and the client, by allowing the use of `process.env.NODE_ENV` (and friends), even in client-side code. Add the following to both of the `plugins` arrays:
+These aren't removed by the minifier because it cannot know that `process.env.NODE_ENV` is equal to `production`. To fix this, we can add [another webpack plugin](https://webpack.js.org/plugins/define-plugin/), that defines constants in the code. It also enables us to keep parity between the server and the client, by allowing the use of `process.env.NODE_ENV` (and friends), even in client-side code. Add the following to both of the `plugins` arrays:
 
 ```js
 new webpack.DefinePlugin({
@@ -972,7 +1020,7 @@ Child
         + 3 hidden modules
 ```
 
-One thing sticks out, though. Since we are already using Babili to minify the code, it doesn't really make sense to use the minified files. Doing so also makes the webpack configuration more complicated. Remove the `resolve.alias`, make a production build and let webpack do its thing:
+One thing sticks out, though. Since we are already using a minifier on the code, it doesn't really make sense to use the minified files. Doing so also makes the webpack configuration more complicated. Remove the `resolve.alias`, make a production build and let webpack do its thing:
 
 ```sh
 > NODE_ENV=production webpack
@@ -1015,7 +1063,7 @@ Whether or not it is worth to include React in the server bundle or not will dif
 module.exports = ({ server } = {}) => ({
   presets: [
     [ 'env', {
-      targets: server ? { node: 'current' } : { browsers: '> 5%, last 2 versions' },
+      targets: server ? { node: 'current' } : { browsers: ['> 5%', 'last 2 versions'] },
       modules: false,
     } ],
 
@@ -1206,7 +1254,7 @@ The two different webpack configurations, each with their own environmental setu
 const path = require('path');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
-const BabiliPlugin = require("babili-webpack-plugin");
+const MinifierPlugin = webpack.optimize.UglifyJSPlugin;
 
 const createBabelConfig = require('./babelrc');
 
@@ -1215,7 +1263,7 @@ const PRODUCTION = process.env.NODE_ENV === 'production';
 const filterFalsy = (arr) => arr.filter(e => e);
 
 const createPlugins = ({ server } = {}) => filterFalsy([
-  PRODUCTION && new BabiliPlugin(),
+  PRODUCTION && new MinifierPlugin(),
 
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
