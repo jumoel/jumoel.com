@@ -771,7 +771,7 @@ const PRODUCTION = process.env.NODE_ENV === 'production';
 Then, make a shorthand for the minifier at the top of `webpack.config.js`:
 
 ```js
-const MinifierPlugin = webpack.optimize.UglifyJSPlugin;
+const MinifierPlugin = webpack.optimize.UglifyJsPlugin;
 ```
 
 Finally, add the following property to both the `clientConfig` and `serverConfig`:
