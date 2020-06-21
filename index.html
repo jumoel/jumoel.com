@@ -2,14 +2,12 @@
 ---
 
 {% for post in site.posts %}
-  {% assign parts = post.content | split: "</p>" %}
-  {% assign content = parts[0] + "</p>" %}
+<div class="post-excerpt">
+  {% assign parts = post.content | markdownify | split: "</p>" %}
+  {% assign content = parts[0] | append: "</p>" %}
   {% assign excerpt = true %}
   {% include post.html %}
-
-  {% unless forloop.last %}
-    <hr class="post-separator">
-  {% endunless %}
+</div>
 {% endfor %}
 
 {% if site.posts.size == 0 %}

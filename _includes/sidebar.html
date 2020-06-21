@@ -1,0 +1,41 @@
+{% if site.posts.size > 0 and page.name != "index.html" and page.name !=
+"archive.html" %}
+<section>
+  <b>Latest posts</b>
+
+  <ul>
+    {% for post in site.posts limit:site.latest_posts_num %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+      <span class="date">{{ post.date | date: site.date_format }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section>
+  <b>Elsewhere</b>
+  <ul>
+    <li>
+      <a href="https://www.twitter.com/{{ site.username.twitter }}">Twitter</a>
+    </li>
+    <li>
+      <a href="https://www.github.com/{{ site.username.github }}">GitHub</a>
+    </li>
+    <li>
+      <a href="https://linkedin.com/in/{{ site.username.linkedin }}"
+        >LinkedIn</a
+      >
+    </li>
+  </ul>
+</section>
+
+<section>
+  <b>Other stuff</b>
+  <ul>
+    <li><a href="/">Frontpage</a></li>
+    <li><a href="/feed.xml">RSS feed</a></li>
+    <li><a href="/archive/">Full post archive</a></li>
+  </ul>
+</section>

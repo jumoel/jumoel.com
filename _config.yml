@@ -2,35 +2,33 @@
 title: Julian Møller
 description: ""
 
-url: "http://www.jumoel.com"
+url: "https://www.jumoel.com"
 baseurl: "/"
 
 timezone: Europe/Copenhagen
 
 date_format: "%b %-d, %Y"
 
-email: "contact-jumoel-com@julianmoeller.dk"
+email: "contact-jumoel-com@jumoel.com"
 username:
   twitter: jumoel
   github: jumoel
-  keybase: jumoel
   linkedin: jumoel
 
 latest_posts_num: 10
 
+host: 0.0.0.0
+
 defaults:
-  -
-    scope: { path: "", type: "pages" }
-    values:
-      layout: "sidebar"
-  -
-    scope: { path: "", type: "posts" }
+  - scope: { path: "", type: "pages" }
+    values: { layout: "default" }
+  - scope: { path: "", type: "posts" }
     values: { layout: "post" }
 
 # Build settings
 destination: _build
 markdown: kramdown
-permalink: /:year/:title.html
+permalink: /posts/:title
 
 # Conform to GitHub Pages defaults
 safe: true

@@ -1,224 +1,276 @@
 ---
 ---
 
-$text-color: #2E2D2D;
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.4;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+$text-color: #2e2d2d;
+$bg-color: #ecf0f1;
 $brand-color: #3498db;
 $brand-color-accent: #8e44ad;
 
-$serif-stack: "charter", Garamond, serif;
-$sans-serif-stack: "-apple-system",
-               BlinkMacSystemFont,
-               "Segoe UI",
-               Roboto,
-               Oxygen,
-               Ubuntu,
-               Cantarell,
-               "Open Sans",
-               "Helvetica Neue",
-               "Helvetica",
-               sans-serif;
+$font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica,
+  Arial, sans-serif;
+$font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 
 body {
-  margin: 0.5em 0 2em;
-
-  font-family: $serif-stack;
-  font-size: 16px;
-  line-height: 1.4em;
-  color: $text-color;
-  background-color: #ecf0f1;
-}
-
-$list-padding: 1.2em;
-ul {
-  list-style-type: none;
-  padding-left: $list-padding;
-
-  li {
-    position: relative;
-
-    &:before {
-      content: "\2022";
-      position: absolute;
-      left: -$list-padding;
-      font-size: 14px;
-      color: lighten($text-color, 20%);
-    }
-  }
-}
-
-ol {
-  padding-left: $list-padding;
-}
-
-.container {
-  border-top: 5px solid $brand-color;
-  background-color: #fff;
-  padding: 1rem 15px;
-
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
-
-  @media (min-width: 992px) {
-    padding: 1rem 4rem;
-  }
-}
-
-a, a:visited {
-  text-decoration: none;
-}
-
-a, a code {
-  color: $brand-color;
-}
-
-a:visited, a:visited code {
-  color: $brand-color-accent;
-}
-
-a:hover, a:active {
-  color: #2980b9;
-  text-decoration: underline;
-}
-
-code {
-  background-color: transparent;
-  color: #5B6153;
-  position: relative;
-  margin: auto -2px;
-  letter-spacing: -0.02em;
-}
-
-h1 code {
-  color: inherit;
-  font-weight: 600;
-}
-
-code, pre {
-  font-family: "source-code", "Monaco", monospace;
-  line-height: 1.4em;
+  font-family: $font;
+  background-color: $bg-color;
 }
 
 pre {
-  background-color: transparent;
-  border-width: 0px;
-  border-radius: 0px;
-  tab-size: 2;
+  overflow-x: scroll;
+  max-width: 100%;
+  font-family: $font-mono;
 }
 
-.header-site {
+a {
+  color: $brand-color;
+
+  &:visited {
+    color: $brand-color-accent;
+  }
+}
+
+.container {
+  display: block;
+
+  max-width: 60rem;
+  margin: 0 auto;
+
+  background-color: darken($color: #fff, $amount: 2%);
+  color: $text-color;
+
+  @media (min-width: 992px) {
+    display: grid;
+    grid-template-columns: 0rem repeat(3, 1fr) 0rem;
+    grid-gap: 0 1rem;
+    grid-template-areas:
+      "header header header header header"
+      ". content content sidebar .";
+
+    box-shadow: 0 0 0.1rem lighten($text-color, 10%);
+
+    margin: 1rem auto;
+  }
+}
+
+.site-header {
+  grid-area: header;
+  background-color: $brand-color;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+
   h1 {
-    text-transform: lowercase;
-    font-style: italic;
-    color: #999;
-    font-size: 18px;
+    font-size: 0.8rem;
   }
 
   a {
-    color: inherit;
-    text-decoration: inherit;
+    color: darken($brand-color, 30%);
+    text-decoration: none;
+    font-family: $font-mono;
+
+    &::before {
+      content: "$> ";
+    }
   }
 }
 
-.content-main {
-  padding-bottom: 2em;
-
-  img {
-    max-width: 100%;
-  }
+.meta {
+  color: lighten($text-color, 30%);
+  font-weight: bold;
 }
 
-.post-separator {
-  width: 50%;
-  margin: 3em auto;
-}
+main {
+  grid-area: content;
+  max-width: 100%;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
 
-.post-list, .nav-list {
+  @media (min-width: 992px) {
     padding: 0;
-    list-style-type: none;
-
-    li:before {
-      content: "";
-    }
-
-    .date {
-      font-size: 0.85em;
-    }
-}
-
-.nav-side {
-  font-family: $sans-serif-stack;
-  font-weight: 200;
-  font-size: 16px;
-  padding-bottom: 3em;
-
-  .date {
-    display: block;
-    color: #555;
-    padding-bottom: 1em;
-  }
-
-  section + section
-  {
-    margin-top: 2em;
+    margin-bottom: 0;
   }
 }
 
-.post {
-  h2 {
-    font-weight: bold;
-    font-size: 24px;
-    font-family: $sans-serif-stack;
-  }
-}
-
-.post-header {
-  h1 {
-    font-weight: bold;
-    font-size: 28px;
-    font-family: $sans-serif-stack;
+.blog-post {
+  header {
+    padding-bottom: 1rem;
 
     code {
-      font-size: 0.95em;
-      letter-spacing: -1px;
+      font-size: 1.3em;
+      letter-spacing: -0.05em;
+    }
+
+    a {
+      color: $text-color;
+      text-decoration: none;
+      line-height: 1em;
     }
   }
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  .post-content {
+    * + * {
+      margin-top: 0.5rem;
+    }
 
-  a:hover:before {
-    content: "#";
-    position: absolute;
-    left: -0.5em;
-    color: lighten($text-color, 70%);
+    h2 {
+      padding: 1rem 0 0.2rem 0;
+    }
+
+    pre {
+      max-width: 100%;
+      margin: 0 -0.5rem;
+      padding: 0.5rem;
+
+      @media (min-width: 992px) {
+        margin: 0 -1rem;
+        padding: 0.5rem 1rem;
+      }
+    }
   }
 }
 
-.post-meta {
-  font-size: 14px;
-}
+.extras {
+  border-top: 0.25rem solid $brand-color;
+  padding: 1rem 0.5rem;
 
-.footnotes {
-  font-size: 14px;
-  margin-top: 4rem;
-  padding-top: 1rem;
-  color: lighten($text-color, 30%);
-
-  p {
-    color: inherit;
+  @media (min-width: 992px) {
+    padding-top: 0;
   }
 }
 
 .hire-me {
-  margin: -0.8em;
-  padding: 0.8em;
+  background-color: lighten($brand-color, 30%);
+  padding: 1rem 0.5rem;
 
-  border: 1px solid $brand-color;
-  border-radius: 0.25rem;
-  background-color: lighten($brand-color, 43%);
-
-  p {
-    margin-bottom: 0;
+  * + * {
+    margin-top: 0.5rem;
   }
+
+  @media (min-width: 992px) {
+    margin-bottom: 1rem;
+  }
+}
+
+.post-excerpt {
+  margin-bottom: 1rem;
+
+  & + & {
+    margin-top: 3rem;
+  }
+}
+
+.archive {
+  margin-bottom: 1rem;
+
+  h2 {
+    line-height: 1em;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  date {
+    display: block;
+    font-size: 0.8em;
+  }
+
+  .archive-list {
+    li + li {
+      margin-top: 0.5rem;
+    }
+  }
+
+  * + h3 {
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .extras {
+    border: 0;
+  }
+
+  .hire-me {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+}
+
+.sidebar {
+  grid-area: sidebar;
 }
