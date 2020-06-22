@@ -37,7 +37,7 @@ body {
   min-height: 100vh;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -79,6 +79,7 @@ $text-color: #2e2d2d;
 $bg-color: #ecf0f1;
 $brand-color: #3498db;
 $brand-color-accent: #8e44ad;
+$link-color: darken($brand-color, 25%);
 
 $font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica,
   Arial, sans-serif;
@@ -96,7 +97,7 @@ pre {
 }
 
 a {
-  color: $brand-color;
+  color: $link-color;
 
   &:visited {
     color: $brand-color-accent;
@@ -137,7 +138,7 @@ a {
   }
 
   a {
-    color: darken($brand-color, 30%);
+    color: darken($brand-color, 40%);
     text-decoration: none;
     font-family: $font-mono;
 
@@ -148,7 +149,7 @@ a {
 }
 
 .meta {
-  color: lighten($text-color, 30%);
+  color: lighten($text-color, 20%);
   font-weight: bold;
 }
 
@@ -273,4 +274,15 @@ main {
 
 .sidebar {
   grid-area: sidebar;
+}
+
+ul.sidebar-links {
+  li {
+    padding: 0.25em 0em;
+  }
+}
+
+.read-more {
+  font-weight: 600;
+  padding: 0.25em 0em;
 }

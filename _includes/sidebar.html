@@ -3,7 +3,7 @@
 <section>
   <b>Latest posts</b>
 
-  <ul>
+  <ul class="sidebar-links">
     {% for post in site.posts limit:site.latest_posts_num %}
     <li>
       <a href="{{ post.url }}">{{ post.title }}</a>
@@ -16,7 +16,7 @@
 
 <section>
   <b>Elsewhere</b>
-  <ul>
+  <ul class="sidebar-links">
     <li>
       <a href="https://www.twitter.com/{{ site.username.twitter }}">Twitter</a>
     </li>
@@ -33,7 +33,7 @@
 
 <section>
   <b>Other stuff</b>
-  <ul>
+  <ul class="sidebar-links">
     <li><a href="/">Frontpage</a></li>
     <li><a href="/feed.xml">RSS feed</a></li>
     <li><a href="/archive/">Full post archive</a></li>
