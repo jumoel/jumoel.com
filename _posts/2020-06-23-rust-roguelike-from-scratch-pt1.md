@@ -7,7 +7,7 @@ categories:
 
 Two tings have collided. Me wanting to learn Rust and the [r/roguelikedev summer tutorial follow-along](https://old.reddit.com/r/roguelikedev/comments/grccvt/roguelikedev_does_the_complete_roguelike_tutorial/). My main motivation (for now) is learning Rust, so I’ve set a restriction for myself: I won’t be using external dependencies for anything that can feasibly be done manually. To keep things manageable, that means that my rogue like will be old school and take place in a plain ol' terminal.
 
-This is the first part, covering [Part 0](http://rogueliketutorials.com/tutorials/tcod/v2/part-0/) and [Part 1](http://rogueliketutorials.com/tutorials/tcod/part-1/).
+This is the first part, covering [Part 0](http://rogueliketutorials.com/tutorials/tcod/part-0/) and [Part 1](http://rogueliketutorials.com/tutorials/tcod/part-1/) or the Roguelike Tutorial.
 
 # Setting up the project
 
