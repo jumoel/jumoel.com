@@ -3,18 +3,13 @@
 
 {% for post in site.posts %}
 <div class="post-excerpt">
-  {% assign parts = post.content | markdownify | split: "</p>" %}
-  {% assign content = parts[0] | append: "</p>" %}
-  {% assign excerpt = true %}
-  {% include post.html %}
+  {% assign excerpt = true %} {% include post.html %}
 </div>
-{% endfor %}
-
-{% if site.posts.size == 0 %}
-  <h1>You're here too early!</h1>
-  <p>
-    I haven't had time to write anything yet, but feel free to get in touch
-    either on <a href="https://www.twitter.com/jumoel">twitter</a> or
-    <a href="mailto:{{ site.email }}">email</a>.
-  </p>
+{% endfor %} {% if site.posts.size == 0 %}
+<h1>You're here too early!</h1>
+<p>
+  I haven't had time to write anything yet, but feel free to get in touch either
+  on <a href="https://www.twitter.com/jumoel">twitter</a> or
+  <a href="mailto:{{ site.email }}">email</a>.
+</p>
 {% endif %}

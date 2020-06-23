@@ -166,6 +166,8 @@ main {
 }
 
 .blog-post {
+  padding-bottom: 1rem;
+
   header {
     padding-bottom: 1rem;
 
@@ -229,7 +231,7 @@ main {
   margin-bottom: 1rem;
 
   & + & {
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 }
 
@@ -274,6 +276,10 @@ main {
 
 .sidebar {
   grid-area: sidebar;
+
+  section + section {
+    margin-top: 1rem;
+  }
 }
 
 ul.sidebar-links {
@@ -285,4 +291,8 @@ ul.sidebar-links {
 .read-more {
   font-weight: 600;
   padding: 0.25em 0em;
+}
+
+pre {
+  line-height: 0.8em;
 }
