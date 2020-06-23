@@ -1,5 +1,5 @@
 ---
-title: A roguelike in Rust from scratch
+title: A roguelike in Rust from scratch, part 1
 categories:
   - rust
   - gamedev
