@@ -1,298 +1,256 @@
 ---
 ---
 
-/* Box sizing rules */
+/* Global Remedies
+******************/
+
+/* Use border-box by default, globally */
 *,
-*::before,
-*::after {
+::before,
+::after {
   box-sizing: border-box;
 }
 
-/* Remove default padding */
-ul[class],
-ol[class] {
+/*
+* Consistent line spacing...
+* CSS Inline Layout Module Level 3: https://drafts.csswg.org/css-inline-3/#line-sizing-property
+*/
+html {
+  line-sizing: normal;
+}
+
+/* Remove the tiny space around the edge of the page */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato,
+    Helvetica, Arial, sans-serif;
+}
+
+/* Headings
+***********/
+
+/* Switch to rem units for headings */
+/* @@@ Initial values are based on existing browser defaults */
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+h2 {
+  font-size: 1.17rem;
+}
+h3 {
+  font-size: 1rem;
+}
+h4 {
+  font-size: 0.83rem;
+}
+h5 {
+  font-size: 0.67rem;
+}
+h6 {
+  font-size: 0.5rem;
+}
+
+/* Keep h1 margins consistent, even when nested */
+h1 {
+  margin: 0.67em 0;
+}
+
+/* Typography
+*************/
+
+/* Overflow by default is bad */
+pre {
+  white-space: pre-wrap;
+}
+
+/*
+* 1. Solid, thin horizontal rules
+* 2. Remove Firefox `color: gray`
+* 3. Remove default `1px` height, and common `overflow: hidden`
+*/
+hr {
+  border-style: solid;
+  border-width: 1px 0 0;
+  color: inherit;
+  height: 0;
+  overflow: visible;
+}
+
+/* Embedded Elements
+********************/
+
+/*
+* 1. Block display is usually what we want
+* 2. Remove strange space-below when inline
+* 3. Responsive by default
+*/
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+/*
+* Maintain intrinsic aspect ratios when `max-width` is applied
+* (iframe, embed, and object have no intrinsic ratio, set height explicitly)
+*/
+img,
+svg,
+video,
+canvas {
+  height: auto;
+}
+
+/*
+* There is no good reason elements default to 300px,
+* and audio files are unlikely to come with a width attribute
+*/
+audio {
+  width: 100%;
+}
+
+/* Old Browsers
+***************/
+
+/* Remove the border on images inside links in IE 10 and earlier */
+img {
+  border-style: none;
+}
+
+/* Hide the overflow in IE 10 and earlier */
+svg {
+  overflow: hidden;
+}
+
+/* Default block display on HTML5 elements */
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block;
+}
+
+/*
+* 1. Add the correct box sizing in IE 10
+* 2. Remove the padding in IE 10
+*/
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
   padding: 0;
 }
 
-/* Remove default margin */
-body,
+/* Reduced Motion
+*****************/
+
+/*
+* 1. Immediately jump any animation to the end point
+* 2. Remove transitions & fixed background attachment
+* See: https://github.com/mozdevs/cssremedy/issues/11
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* Line Heights
+***************/
+
+/*
+* The default `normal` line-height is tightly spaced, but takes font-metrics into account.
+* Looser spacing may improve readability, but may cause problems in some scripts.
+* See: https://github.com/mozdevs/cssremedy/issues/7
+*/
+html {
+  line-height: 1.5;
+}
 h1,
 h2,
 h3,
 h4,
-p,
-ul[class],
-ol[class],
-li,
-figure,
+h5,
+h6 {
+  line-height: 1.25;
+}
+caption,
 figcaption,
-blockquote,
-dl,
-dd {
-  margin: 0;
+label,
+legend {
+  line-height: 1.375;
 }
 
-/* Set core body defaults */
-body {
-  min-height: 100vh;
-  scroll-behavior: smooth;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
-}
-
-/* Remove list styles on ul, ol elements with a class attribute */
-ul[class],
-ol[class] {
-  list-style: none;
-}
-
-/* A elements that don't have a class get default styles */
-a:not([class]) {
-  text-decoration-skip-ink: auto;
-}
-
-/* Make images easier to work with */
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* Inherit fonts for inputs and buttons */
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-
-/* Remove all animations and transitions for people that prefer not to see them */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-$text-color: #2e2d2d;
-$bg-color: #ecf0f1;
-$brand-color: #3498db;
-$brand-color-accent: #8e44ad;
-$link-color: darken($brand-color, 25%);
-
-$font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica,
-  Arial, sans-serif;
-$font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
-
-body {
-  font-family: $font;
-  background-color: $bg-color;
-}
-
-pre {
-  overflow-x: scroll;
-  max-width: 100%;
-  font-family: $font-mono;
-}
-
-a {
-  color: $link-color;
-
-  &:visited {
-    color: $brand-color-accent;
-  }
+pre.highlight {
+  padding: 0.5rem;
 }
 
 .container {
-  display: block;
-
-  max-width: 60rem;
+  padding: 0.5rem;
+  max-width: 50rem;
   margin: 0 auto;
-
-  background-color: darken($color: #fff, $amount: 2%);
-  color: $text-color;
-
-  @media (min-width: 992px) {
-    display: grid;
-    grid-template-columns: 0rem repeat(3, 1fr) 0rem;
-    grid-gap: 0 1rem;
-    grid-template-areas:
-      "header header header header header"
-      ". content content sidebar .";
-
-    box-shadow: 0 0 0.1rem lighten($text-color, 10%);
-
-    margin: 1rem auto;
-  }
 }
 
 .site-header {
-  grid-area: header;
-  background-color: $brand-color;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
-
   h1 {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    color: #000;
   }
 
   a {
-    color: darken($brand-color, 40%);
     text-decoration: none;
-    font-family: $font-mono;
-
-    &::before {
-      content: "$> ";
-    }
-  }
-}
-
-.meta {
-  color: lighten($text-color, 20%);
-  font-weight: bold;
-}
-
-main {
-  grid-area: content;
-  max-width: 100%;
-  padding: 0 1rem;
-  margin-bottom: 2rem;
-
-  @media (min-width: 992px) {
-    padding: 0;
-    margin-bottom: 0;
   }
 }
 
 .blog-post {
-  padding-bottom: 1rem;
-
   header {
-    padding-bottom: 1rem;
+    h1 {
+      margin-bottom: 0;
 
-    code {
-      font-size: 1.3em;
-      letter-spacing: -0.05em;
-    }
-
-    a {
-      color: $text-color;
-      text-decoration: none;
-      line-height: 1em;
-    }
-  }
-
-  .post-content {
-    * + * {
-      margin-top: 0.5rem;
-    }
-
-    h2 {
-      padding: 1rem 0 0.2rem 0;
-    }
-
-    pre {
-      max-width: 100%;
-      margin: 0 -0.5rem;
-      padding: 0.5rem;
-
-      @media (min-width: 992px) {
-        margin: 0 -1rem;
-        padding: 0.5rem 1rem;
+      p {
+        margin: 0;
       }
     }
-  }
-}
 
-.extras {
-  border-top: 0.25rem solid $brand-color;
-  padding: 1rem 0.5rem;
-
-  @media (min-width: 992px) {
-    padding-top: 0;
-  }
-}
-
-.hire-me {
-  background-color: lighten($brand-color, 30%);
-  padding: 1rem 0.5rem;
-
-  * + * {
-    margin-top: 0.5rem;
-  }
-
-  @media (min-width: 992px) {
-    margin-bottom: 1rem;
-  }
-}
-
-.post-excerpt {
-  margin-bottom: 1rem;
-
-  & + & {
-    margin-top: 2rem;
-  }
-}
-
-.archive {
-  margin-bottom: 1rem;
-
-  h2 {
-    line-height: 1em;
-    margin-bottom: 1rem;
-  }
-
-  ul {
-    list-style-type: none;
-  }
-
-  date {
-    display: block;
-    font-size: 0.8em;
-  }
-
-  .archive-list {
-    li + li {
-      margin-top: 0.5rem;
+    .meta {
+      margin-top: 0;
     }
-  }
-
-  * + h3 {
-    margin-top: 1rem;
-  }
-}
-
-@media (min-width: 992px) {
-  .extras {
-    border: 0;
-  }
-
-  .hire-me {
-    padding: 0.5rem;
-    border-radius: 0.25rem;
   }
 }
 
 .sidebar {
-  grid-area: sidebar;
+  background-color: #eee;
+  margin: 3rem -0.5rem 0 -0.5rem;
+  padding: 0.5rem;
+}
 
-  section + section {
-    margin-top: 1rem;
+.post-excerpt {
+  & + & {
+    margin-top: 3rem;
   }
 }
 
-ul.sidebar-links {
-  li {
-    padding: 0.25em 0em;
-  }
-}
-
-.read-more {
-  font-weight: 600;
-  padding: 0.25em 0em;
-}
-
-pre {
-  line-height: 0.8em;
+p > code {
+  font-size: 1.1em;
 }
