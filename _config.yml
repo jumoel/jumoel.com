@@ -11,7 +11,6 @@ date_format: "%b %-d, %Y"
 
 email: "contact-jumoel-com@jumoel.com"
 username:
-  twitter: jumoel
   github: jumoel
   linkedin: jumoel
 
@@ -27,7 +26,11 @@ defaults:
 
 # Build settings
 destination: _build
-markdown: kramdown
+markdown: CommonMarkGhPages
+commonmark:
+  options: ["UNSAFE", "SMART", "FOOTNOTES"]
+  extensions: ["strikethrough", "autolink", "table", "tagfilter"]
+  syntax_highlighter: rouge
 permalink: /posts/:title
 
 # Conform to GitHub Pages defaults

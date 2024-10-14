@@ -1,14 +1,28 @@
-<article class="blog-post">
+<article class="{% if excerpt %}{% endif %}pb-4">
   <header>
-    <h1><a href="{{ post.url }}">{{ post.title | markdownify }}</a></h1>
-    <p class="meta">{{ post.date | date: site.date_format }}</p>
+    <h1
+      class="text-lg font-mono tracking-tight font-semibold text-blue-950 dark:text-blue-200"
+    >
+      <a href="{{ post.url }}">{{ post.title | markdownify }}</a>
+    </h1>
+    <p class="text-sm text-neutral-400">
+      {{ post.date | date: site.date_format }}
+    </p>
   </header>
 
-  <section class="post-content">
+  <section
+    class="post-content prose dark:prose-invert max-w-none prose-a:text-blue-400 before:prose-code:content-none after:prose-code:content-none prose-a:underline-offset-2"
+  >
     {% if excerpt %} {{ post.excerpt }} {% else %} {{ content }} {% endif %}
   </section>
 
   {% if excerpt %}
-  <a class="read-more" href="{{ post.url }}">Read more &rarr;</a>
+  <div class="mt-4">
+    <a
+      class="underline underline-offset-2 text-blue-950 dark:text-blue-200"
+      href="{{ post.url }}"
+      >Read more &rarr;</a
+    >
+  </div>
   {% endif %}
 </article>
