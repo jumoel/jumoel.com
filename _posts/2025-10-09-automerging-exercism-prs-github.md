@@ -10,6 +10,8 @@ To solve this, I got [Copilot](https://github.com/copilot) to create a workflow 
 
 Here's the workflow, if you want to use it:
 
+{% raw %}
+
 ```yaml
 name: Auto-merge Exercism Solutions
 
@@ -23,11 +25,11 @@ jobs:
     if: |
       github.event.pull_request.user.login == 'exercism-solutions-syncer[bot]' &&
       github.event.pull_request.user.type == 'Bot'
-    
+
     permissions:
       contents: write
       pull-requests: write
-    
+
     steps:
       - name: Auto-merge PR
         run: |
@@ -36,3 +38,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
 ```
+
+{% endraw %}
