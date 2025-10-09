@@ -20,7 +20,7 @@ jobs:
           bundler-cache: true
           cache-version: 0 # Increment this number if you need to re-download cached gems
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .node-version
           cache: "npm"
