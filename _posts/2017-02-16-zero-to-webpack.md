@@ -439,7 +439,7 @@ module.exports = {
 
 Build the project, refresh `index.html` in the browser and you should see a pretty `<h1>Hello World</h1>` rendered in all its glory.
 
-![Hello, World!]( https://d2mxuefqeaa7sj.cloudfront.net/s_B5FBF7D9770BEE231DD69DE37D564F31BB1E2EA8749E0BFDEC061C4C846F6B8C_1487232235310_file.png)
+![Hello, World!](/images/webpack-react-hello-world.png)
 
 If you do not already have the React DevTools installed, visit [https://fb.me/react-devtools](https://fb.me/react-devtools) and do so.
 
