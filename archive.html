@@ -3,7 +3,7 @@ title: Post archive
 ---
 
 <section class="archive">
-  <h2>Chronological post archive</h2>
+  <h2 class="text-xl font-bold mb-4">Chronological post archive</h2>
 
 {% assign year = false %}
 {% assign first = true %}
@@ -20,8 +20,8 @@ title: Post archive
     {% endif %}
 
     {% assign year = curr_year %}
-    <h3 id="year-{{ curr_year }}">{{ curr_year }}</h3>
-      <ul class="archive-list">
+    <h3 id="year-{{ curr_year }}" class="font-bold">{{ curr_year }}</h3>
+      <ul class="archive-list mb-4">
   {% endif %}
 
         <li>

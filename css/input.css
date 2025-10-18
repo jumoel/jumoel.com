@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
 	footer a {
@@ -9,7 +11,7 @@
 }
 
 .highlight, .prose img {
-	@apply rounded;
+	@apply rounded-sm;
 }
 
 /* Dracula Theme v1.2.5
