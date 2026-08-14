@@ -8,6 +8,11 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  # Trigger from the repo containing content
+  repository_dispatch:
+    types:
+      - "posts-changed"
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
@@ -27,6 +32,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Checkout content
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ secrets.NOTES_REPO }}
+          token: ${{ secrets.NOTES_JUMOELCOM_TOKEN }}
+          path: notes
+          sparse-checkout: posts
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
