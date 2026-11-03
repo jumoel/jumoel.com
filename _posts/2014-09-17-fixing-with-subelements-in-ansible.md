@@ -1,6 +1,6 @@
 ---
 title: "Fixing `with_subelements` in Ansible"
-categories: infrastructure
+categories: [infrastructure]
 date: 2014-09-17 08:03:00
 ---
 

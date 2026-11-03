@@ -1,6 +1,6 @@
 ---
 title: From zero to webpack, one error at the time
-categories: tooling
+categories: [tooling]
 ---
 
 If you've ever struggled getting to grips with webpack, now is a good time to get started. The stable release of webpack version 2 is out, and this guide will take you from zero to a functional webpack configuration. The end result will be a small, but working React application. The configuration will be expanded one item at a time and will be driven by error messages. By not starting out with a boilerplate, you'll be able to understand what each part does, and thus be able to expand upon it yourself if new needs arise.

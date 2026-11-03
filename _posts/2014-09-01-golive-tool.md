@@ -1,6 +1,6 @@
 ---
 title: "Golive: A simple deployment tool"
-categories: infrastructure
+categories: [infrastructure]
 date: 2014-09-01 13:49:00
 ---
 

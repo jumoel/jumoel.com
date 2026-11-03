@@ -1,6 +1,6 @@
 ---
 title: Using Tailwind classnames in React Native with intellisense
-categories: infrastructure
+categories: [code]
 date: 2020-09-02 10:00
 ---
 

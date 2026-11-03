@@ -1,6 +1,6 @@
 ---
 title: Automerging GitHub PR's from the exercism.org sync bot
-categories: code
+categories: [code]
 date: 2025-10-09 10:57
 ---
 

@@ -4,4 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+askama = "0.16.1"
 pulldown-cmark = { version = "0.13.6" }
+serde = { version = "1.0.229", features = ["derive"] }
+yaml_serde = "0.10.7"

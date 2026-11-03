@@ -1,6 +1,6 @@
 ---
 title: Ansible, Rackspace and Idempotence
-categories: infrastructure
+categories: [infrastructure]
 date: 2014-08-26 22:35:00
 ---
 
