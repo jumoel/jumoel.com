@@ -5,6 +5,8 @@ edition = "2024"
 
 [dependencies]
 askama = "0.16.1"
+chrono = { version = "0.4.45", features = ["serde"] }
 pulldown-cmark = { version = "0.13.6" }
+regex = "1.13.1"
 serde = { version = "1.0.229", features = ["derive"] }
 yaml_serde = "0.10.7"

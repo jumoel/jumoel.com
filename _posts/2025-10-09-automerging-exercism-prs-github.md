@@ -1,7 +1,7 @@
 ---
 title: Automerging GitHub PR's from the exercism.org sync bot
 categories: [code]
-date: 2025-10-09 10:57
+date: 2025-10-09 10:57:00
 ---
 
 [Exercism.org](https://exercism.org/) has a bot to synchronize your exercise solutions to a GitHub repository. If you're not an Exercism Insider, the bot will only open PR's for you and not merge directly to your primary branch.

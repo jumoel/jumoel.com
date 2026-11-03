@@ -1,5 +1,6 @@
 ---
 title: A roguelike in Rust from scratch, part 1
+date: 2020-06-23 12:00:00
 categories:
   - rust
   - gamedev

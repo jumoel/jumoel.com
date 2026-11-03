@@ -1,7 +1,7 @@
 ---
 title: Using Tailwind classnames in React Native with intellisense
 categories: [code]
-date: 2020-09-02 10:00
+date: 2020-09-02 10:00:00
 ---
 
 I'm writing a small app using [React Native](https://reactnative.dev). Since I'm a fan of [Tailwind](https://tailwindcss.com) for styling on the web, I wanted to use it for the app as well. The package [`tailwind-rn`](https://www.npmjs.com/package/tailwind-rn) is available, but requires the use of `tailwind('...')` to apply styles, which [doesn't work](https://github.com/tailwindlabs/tailwindcss-intellisense/issues/129) with the [intellisense plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss).
