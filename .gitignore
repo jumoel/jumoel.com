@@ -3,3 +3,8 @@ _build
 vendor/
 node_modules/
 css/style.css
+
+
+# Added by cargo
+
+/target
