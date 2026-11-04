@@ -1,0 +1,8 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<pre>{{ date.format("%Y-%m-%d") }}</pre>
+
+{{ content | escape("none") }}
+{% endblock content %}

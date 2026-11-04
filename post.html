@@ -1,0 +1,170 @@
+<h1>A roguelike in Rust from scratch, part 1</h1>
+<pre>2020-06-23</pre>
+
+<p>Two tings have collided. Me wanting to learn Rust and the <a href="https://old.reddit.com/r/roguelikedev/comments/grccvt/roguelikedev_does_the_complete_roguelike_tutorial/">r/roguelikedev summer tutorial follow-along</a>. My main motivation (for now) is learning Rust, so I’ve set a restriction for myself: I won’t be using external dependencies for anything that can feasibly be done manually. To keep things manageable, that means that my rogue like will be old school and take place in a plain ol' terminal.</p>
+<p>This is the first part, covering <a href="http://rogueliketutorials.com/tutorials/tcod/part-0/">Part 0</a> and <a href="http://rogueliketutorials.com/tutorials/tcod/part-1/">Part 1</a> or the Roguelike Tutorial.</p>
+<h1>Setting up the project</h1>
+<p>This was the easy part. Install <a href="https://rustup.rs/">rustup</a> and run:</p>
+<pre><code class="language-sh">$ rustup-init
+&lt;snip&gt;
+$ cargo new roguelike-rs
+     Created binary (application) `roguelike-rs` package
+$ cd roguelike-rs
+$ cargo run
+   Compiling roguelike-rs v0.1.0
+    Finished dev [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/roguelike-rs`
+Hello, world!
+</code></pre>
+<h1>Drawing a canvas</h1>
+<p>Since I'm restricting the project to a pure terminal output, drawing a canvas is a lot of <code>print!</code> calls:</p>
+<pre><code class="language-rs">struct Player {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let width = 40;
+    let height = 25;
+
+    let p = Player {
+        x: width / 2,
+        y: height / 2,
+    };
+
+    for y in 0..height {
+        for x in 0..width {
+            if p.x == x &amp;&amp; p.y == y {
+                print!("@");
+            } else {
+                print!(".");
+            }
+        }
+        print!("\n");
+    }
+}
+</code></pre>
+<p>For now, the only state I'm tracking is the player position. To begin with, they are in the middle of the map.</p>
+<p>This is what <code>cargo run</code> looks like:</p>
+<pre><code>........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+....................@...................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+</code></pre>
+<p>Not the most exciting stuff, so I'd like to jazz it up a little with borders, which can be done with some <code>if</code>s and some <a href="">line drawing characters</a>:</p>
+<pre><code class="language-rs">for y in -1..(height + 1) {
+    for x in -1..(width + 1) {
+        if x == -1 &amp;&amp; y == -1 {
+            print!("┌");
+        } else if x == width &amp;&amp; y == -1 {
+            print!("┐")
+        } else if x == -1 &amp;&amp; y == height {
+            print!("└")
+        } else if x == width &amp;&amp; y == height {
+            print!("┘")
+        } else if x == -1 || x == width {
+            print!("│")
+        } else if y == -1 || y == height {
+            print!("─")
+        } else if x == p.x &amp;&amp; y == p.y {
+            print!("@")
+        } else {
+            print!(".")
+        }
+    }
+    print!("\n");
+}
+</code></pre>
+<p>Which results in:</p>
+<pre><code>┌────────────────────────────────────────┐
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│....................@...................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+│........................................│
+└────────────────────────────────────────┘
+</code></pre>
+<p>Much better!</p>
+<p>To be able to handle input, the rendering is put in a loop. At the beginning of the loop, the console is cleared to make ready for a new cycle.</p>
+<pre><code class="language-rs">loop {
+  // Position the cursor at (1,1)
+  print!("\x1B[1;1H");
+  // Clear the screen
+  print!("\x1B[2J");
+
+  // for { ... }
+}
+</code></pre>
+<p>This loops indefinetely, so to be able to exit the game without typing <code>Ctrl-C</code>, I wait for user input and quit if it matches <code>q</code>:</p>
+<pre><code class="language-rs">loop {
+  // ...snip
+  println!("Command [q]: ");
+
+  let mut s = String::new();
+  io::stdin().read_line(&amp;mut s).unwrap();
+
+  match s.as_str().trim() {
+      "q" =&gt; break,
+      _ =&gt; (),
+  }
+}
+</code></pre>
+<p>Typing <code>q&lt;Enter&gt;</code> will now quit the game. The same construct can be used to move the player character around:</p>
+<pre><code class="language-rs">loop {
+  println!("Command [h/j/k/l/q]: ");
+
+  // ...snip
+
+  match s.as_str().trim() {
+      "q" =&gt; break,
+      "h" =&gt; p.x -= 1,
+      "l" =&gt; p.x += 1,
+      "j" =&gt; p.y += 1,
+      "k" =&gt; p.y -= 1,
+      _ =&gt; (),
+  }
+}
+</code></pre>
+<p>I've used the Vim movement keys because the game can't read arrow keys and such because the terminal is in <a href="https://en.wikipedia.org/wiki/Terminal_mode">"cooked" mode</a>.</p>
+<p>While entering "raw" mode can certainly be done, achieving it requires interfacing with system calls and how it's done differs a lot based on platforms. Since I'd like this game to also be playable on machines other than my own, this is a point where an external dependency feels valid. I won't be using a crate for making text UI's, but "just" something to make <code>stdout</code> manageable. I decided upon <a href="https://crates.io/crates/crossterm"><code>crossterm</code></a>, but converting the code to use <code>crossterm</code> will have to wait a bit - the changes seem to be quite large.</p>

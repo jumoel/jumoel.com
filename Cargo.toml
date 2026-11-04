@@ -2,10 +2,12 @@
 name = "jumoelcom"
 version = "0.1.0"
 edition = "2024"
+default-run = "jumoelcom"
 
 [dependencies]
 askama = "0.16.1"
 chrono = { version = "0.4.45", features = ["serde"] }
+miniserve = { version = "0.35.0", artifact = "bin" }
 pulldown-cmark = { version = "0.13.6" }
 regex = "1.13.1"
 serde = { version = "1.0.229", features = ["derive"] }

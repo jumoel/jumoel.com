@@ -1,7 +1,7 @@
 use std::{
     ffi::OsStr,
     fmt::Display,
-    fs::{self},
+    fs::{self, DirBuilder},
     path::Path,
 };
 
@@ -121,7 +121,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let p = posts.first().expect("No posts found");
 
-    let out_folder = Path::new("./_dist");
+    let out_folder = Path::new("./_build");
+    if Path::new(out_folder).is_dir() {
+        fs::remove_dir_all(out_folder)?;
+    }
+
     for post in &posts {
         let rendered = PostTemplate {
             title: &p.frontmatter.title,
@@ -136,8 +140,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let slug = &captures["slug"];
 
         let out_path = out_folder.join(format!("posts/{}/index.html", slug));
+        let out_dir = out_path.parent().expect("Outfile needs a parent path");
 
-        println!("{:?}", out_path);
+        DirBuilder::new().recursive(true).create(&out_dir)?;
+        let mut fd = std::fs::File::create(&out_path)?;
+
+        rendered.write_into(&mut fd)?;
     }
 
     Ok(())
