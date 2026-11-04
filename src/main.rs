@@ -1,8 +1,9 @@
 use std::{
     ffi::OsStr,
     fmt::Display,
-    fs::{self, DirBuilder},
-    path::Path,
+    fs::{self, DirBuilder, File},
+    io::Write,
+    path::{Path, PathBuf},
 };
 
 use askama::Template;
@@ -55,9 +56,28 @@ struct PostTemplate<'a> {
     title: &'a str,
     date: &'a PostDate,
     content: &'a str,
+    frontmatter: &'a Frontmatter,
+}
+
+#[derive(Debug, Template)]
+#[template(path = "page.html")]
+struct PageTemplate<'a> {
+    posts: &'a Vec<Post>,
+    raw_content: &'a str,
+}
+
+#[derive(Debug)]
+struct Page {
+    outfile: PathBuf,
+    content: String,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let out_folder = Path::new("./_build");
+    if Path::new(out_folder).is_dir() {
+        fs::remove_dir_all(out_folder)?;
+    }
+
     let posts = Path::new("./_posts")
         .read_dir()?
         .collect::<Result<Vec<_>, _>>()?
@@ -119,18 +139,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         })
         .collect::<Vec<_>>();
 
-    let p = posts.first().expect("No posts found");
-
-    let out_folder = Path::new("./_build");
-    if Path::new(out_folder).is_dir() {
-        fs::remove_dir_all(out_folder)?;
-    }
-
     for post in &posts {
         let rendered = PostTemplate {
-            title: &p.frontmatter.title,
-            date: &p.frontmatter.date,
-            content: &p.html,
+            title: &post.frontmatter.title,
+            date: &post.frontmatter.date,
+            content: &post.html,
+            frontmatter: &post.frontmatter,
         };
 
         let slug_re = regex::Regex::new(r"\d{4}-\d{2}-\d{2}-(?P<slug>.+)\.md")?;
@@ -147,6 +161,48 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         rendered.write_into(&mut fd)?;
     }
+
+    let pages = Path::new("./_pages")
+        .read_dir()?
+        .filter_map(Result::ok)
+        .filter_map(|f| {
+            let path = f.path();
+
+            let outfile = match (path.extension(), path.file_stem()) {
+                (Some(ext), Some(name)) if ext == "html" && name == "index" => {
+                    format!("index.html")
+                }
+                (Some(ext), Some(name)) if ext == "html" => {
+                    format!("{}/index.html", name.to_str()?)
+                }
+                _ => return None,
+            };
+
+            let raw_content = fs::read_to_string(path).ok()?;
+
+            let template = PageTemplate {
+                posts: &posts,
+                raw_content: &raw_content,
+            };
+
+            let content = template.render().ok()?;
+
+            Some(Page {
+                outfile: out_folder.join(outfile),
+                content,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    for page in &pages {
+        DirBuilder::new()
+            .recursive(true)
+            .create(&page.outfile.parent().expect("Outfile needs a parent path"))?;
+        let mut fd = File::create(&page.outfile)?;
+        fd.write_all(&page.content.as_bytes())?;
+    }
+
+    // TODO: Omskriv det her til MiniJinja, jeg har brug for runtime templates
 
     Ok(())
 }
